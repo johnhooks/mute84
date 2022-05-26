@@ -1,0 +1,3 @@
+## Installed Packages
+
+-   `laravel/breeze`
