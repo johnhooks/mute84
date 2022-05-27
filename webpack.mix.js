@@ -13,17 +13,20 @@ const LiveReloadPlugin = require("webpack-livereload-plugin");
  */
 
 mix.js("resources/js/app.js", "public/js")
+    .js("resources/js/audio.js", "public/js")
     .postCss("resources/css/app.css", "public/css", [
         require("postcss-import"),
         require("tailwindcss"),
         require("autoprefixer"),
     ])
     .webpackConfig({
-        plugins: [new LiveReloadPlugin({
-            ignore: /(node_modules)|(vendor)/,
-            // https://github.com/livereload/livereload-js/blob/master/src/options.js
-            ext: "js,css,php"
-        })],
+        plugins: [
+            new LiveReloadPlugin({
+                ignore: /(node_modules)|(vendor)/,
+                // https://github.com/livereload/livereload-js/blob/master/src/options.js
+                ext: "js,css,php",
+            }),
+        ],
         watchOptions: {
             // https://webpack.js.org/configuration/watch/#watchoptionsignored
             ignored: /(node_modules)|(vendor)/,
