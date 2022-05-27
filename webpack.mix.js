@@ -19,5 +19,15 @@ mix.js("resources/js/app.js", "public/js")
         require("autoprefixer"),
     ])
     .webpackConfig({
-        plugins: [new LiveReloadPlugin()],
+        plugins: [new LiveReloadPlugin({
+            ignore: /(node_modules)|(vendor)/,
+            // https://github.com/livereload/livereload-js/blob/master/src/options.js
+            ext: "js,css,php"
+        })],
+        watchOptions: {
+            // https://webpack.js.org/configuration/watch/#watchoptionsignored
+            ignored: /(node_modules)|(vendor)/,
+            // https://webpack.js.org/configuration/watch/#watchoptionspoll
+            poll: 1000,
+        },
     });
