@@ -1,8 +1,8 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/js/audio.js": "/js/audio.js",
-    "/js/player.js": "/js/player.js",
-    "/js/sampler.js": "/js/sampler.js",
-    "/js/polyfill.js": "/js/polyfill.js",
-    "/css/app.css": "/css/app.css"
+    "/js/app.js": "/js/app.js?id=27c980217c20f931777f9a4b3bfb9301",
+    "/js/audio.js": "/js/audio.js?id=8b0ffd937fcf63a2b787c942bcb12893",
+    "/js/player.js": "/js/player.js?id=b5a49b91b6b2bab2507dbf1c25707b0d",
+    "/js/sampler.js": "/js/sampler.js?id=fce7019b0a0f0e146a104ae3fa0542c2",
+    "/js/polyfill.js": "/js/polyfill.js?id=922b89a1135ea0e3a022f695dd3df644",
+    "/css/app.css": "/css/app.css?id=485c4bba04d54b631715b4fdc764bdd5"
 }

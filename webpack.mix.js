@@ -37,3 +37,7 @@ mix.js("resources/js/app.js", "public/js")
             poll: 1000,
         },
     });
+
+if (mix.inProduction()) {
+    mix.version();
+}
