@@ -57,7 +57,7 @@
         </div>
     </div>
     <div class="flex justify-center items-center pb-4">
-        <audio id="tapeloop" src="/storage/dadbeats_20220525_08_tape_loop.MP3" controls crossorigin="anonymous" />
+        <audio id="tapeloop" src="/storage/dadbeats_20220525_08_tape_loop.MP3" controls />
     </div>
 </body>
 

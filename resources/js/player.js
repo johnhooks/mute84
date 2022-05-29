@@ -83,17 +83,17 @@ function drawTimeData() {
         canvasState.width * canvasState.scale,
         canvasState.height * canvasState.scale,
         0,
-        -4
+        -8
     );
     // ctx.clearRect(0, 0, WIDTH, HEIGHT);
     // 2. setup some canvas drawing
     ctx.lineWidth = 2;
-    // ctx.strokeStyle = Color.wheel(colorIndex).dim(80).stringify();
+    ctx.strokeStyle = Color.wheel(colorIndex).dim(80).stringify();
 
-    ctx.strokeStyle = "#fff";
+    // ctx.strokeStyle = "#fff";
 
-    sineIndex += 1;
-    if (sineIndex > 255) sineIndex = 100;
+    colorIndex += 1;
+    if (colorIndex > 255) colorIndex = 0;
 
     ctx.beginPath();
 
