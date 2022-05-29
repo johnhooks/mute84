@@ -80,7 +80,6 @@ export class Sampler {
 
         this.recorder.ondataavailable = (e) => {
             this.chunks.push(e.data);
-            console.log("chunked");
         };
 
         this.analyser = this.ctx.createAnalyser();

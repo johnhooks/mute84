@@ -40,7 +40,7 @@
     <script>
         if (!window.MediaRecorder) {
             document.write(
-                decodeURI('%3Cscript defer src="/polyfill.js">%3C/script>')
+                decodeURI('%3Cscript defer src="/js/polyfill.js">%3C/script>')
             )
         }
     </script>
