@@ -24,25 +24,15 @@
  * - record and playback buttons
  */
 
+import { Sampler } from "./sampler/sampler";
+
 const FRAMERATE = 1000 / 60;
-
-let analyzer;
-let bufferLength;
-
-/** @type {AudioContext} */
-let audioCtx;
-/** @type {MediaStreamAudioSourceNode | MediaElementAudioSourceNode} */
-let micSource;
-/** @type {MediaElementAudioSourceNode} */
-let bufferSource;
 
 const canvasState = initCanvas();
 
 const ctx = canvasState.context;
 const WIDTH = canvasState.width;
 const HEIGHT = canvasState.height;
-
-let chunks = [];
 
 /** @type {HTMLButtonElement} */
 const record = document.querySelector("#record-btn");
@@ -53,8 +43,7 @@ const buffer = document.querySelector("#buffer");
 
 // console.log(MediaRecorder.isTypeSupported("audio/wav;codecs=MS_PCM"));
 
-let recording = false;
-let sampleReady = false;
+let sampler = new Sampler(buffer);
 
 function startRecord() {
     record.classList.remove("bg-red-500", "hover:bg-red-700");
@@ -67,37 +56,24 @@ function stopRecord() {
 }
 
 async function getAudio() {
-    const stream = await navigator.mediaDevices
-        .getUserMedia({
-            audio: true,
-        })
-        .catch(handleError);
+    await sampler.initialize();
 
-    if (!stream) return;
-
-    audioCtx = new AudioContext();
-    bufferSource = audioCtx.createMediaElementSource(buffer);
-
-    const mediaRecorder = new MediaRecorder(stream);
-
-    visualize(stream);
+    visualize();
 
     record.onclick = function () {
-        if (recording) {
+        if (sampler.recording) {
             stopRecord();
-            mediaRecorder.stop();
-            console.log(mediaRecorder.state);
+            sampler.stopRecord();
+            console.log(sampler.recorder.state);
             console.log("recorder stopped");
             play.disabled = false;
         } else {
-            sampleReady = false;
             startRecord();
-            mediaRecorder.start();
+            sampler.startRecord();
             play.disabled = true;
-            console.log(mediaRecorder.state);
+            console.log(sampler.recorder.state);
             console.log("recorder started");
         }
-        recording = !recording;
     };
 
     play.onclick = function () {
@@ -107,31 +83,15 @@ async function getAudio() {
 
         // play.disabled = true;
         // record.disabled = true;
-        if (!recording && sampleReady) {
+        if (!sampler.recording && sampler.buffered) {
             // const track = audioCtx.createMediaElementSource(buffer);
             // track.connect(audioCtx.destination);
-            buffer.play();
+            if (sampler.playing) {
+                sampler.stopPlayback();
+            } else {
+                sampler.startPlayback();
+            }
         }
-    };
-
-    mediaRecorder.onstop = function (e) {
-        console.log("data available after MediaRecorder.stop() called.");
-
-        // buffer.setAttribute('controls', '');
-
-        const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
-        chunks = [];
-        const audioURL = window.URL.createObjectURL(blob);
-        buffer.src = audioURL;
-        console.log("recorder stopped");
-
-        // const track = audioCtx.createMediaElementSource(buffer);
-        // track.connect(audioCtx.destination);
-        sampleReady = true;
-    };
-
-    mediaRecorder.ondataavailable = function (e) {
-        chunks.push(e.data);
     };
 }
 
@@ -148,26 +108,15 @@ async function getAudio() {
 
 /**
  *
- * @param { MediaStream} stream
  */
-function visualize(stream) {
-    analyzer = audioCtx.createAnalyser();
-    // console.log(analyzer)
-    micSource = audioCtx.createMediaStreamSource(stream);
-    micSource.connect(analyzer);
-    // How much data should we collect
-    analyzer.fftSize = 2 ** 12; // 32768;
-    // pull the data off the audio
-    // how many pieces of data are there?!?
-    bufferLength = analyzer.frequencyBinCount;
-    const timeData = new Uint8Array(bufferLength);
+function visualize() {
     // const frequencyData = new Uint8Array(bufferLength);
-    drawTimeData(timeData);
+    drawTimeData();
 }
 
-function drawTimeData(timeData) {
+function drawTimeData() {
     // inject the time data into our timeData array
-    analyzer.getByteTimeDomainData(timeData);
+    const timeData = sampler.getTimeData();
     // now that we have the data, lets turn it into something visual
     // 1. Clear the canvas
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
@@ -178,10 +127,10 @@ function drawTimeData(timeData) {
     ctx.strokeStyle = "#ffc600";
     ctx.beginPath();
 
-    const sliceWidth = (WIDTH * canvasState.scale) / bufferLength;
+    const sliceWidth = (WIDTH * canvasState.scale) / timeData.byteLength;
     let x = 0;
 
-    for (let i = 0; i < bufferLength; i++) {
+    for (let i = 0; i < timeData.byteLength; i++) {
         const v = timeData[i] / 128;
         const y = (v * HEIGHT) / 2;
 
@@ -196,11 +145,7 @@ function drawTimeData(timeData) {
 
     ctx.stroke();
     // call itself as soon as possible
-    requestAnimationFrame(() => drawTimeData(timeData));
-}
-
-function handleError(err) {
-    console.log("You must give access to your mic in order to proceed");
+    requestAnimationFrame(() => drawTimeData());
 }
 
 getAudio();

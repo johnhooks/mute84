@@ -21,9 +21,11 @@ export class Sampler {
     chunks = [];
 
     /** @type {Uint8Array} */
-    timeDateBuffer;
+    timeDataBuffer;
 
     recording = false;
+
+    playing = false;
 
     buffered = false;
 
@@ -32,7 +34,6 @@ export class Sampler {
      */
     constructor(bufferElement) {
         this.bufferElement = bufferElement;
-        this.initialize();
     }
 
     async initialize() {
@@ -49,9 +50,13 @@ export class Sampler {
 
         this.ctx = new AudioContext();
 
+        this.micSource = this.ctx.createMediaStreamSource(stream);
         this.bufferSource = this.ctx.createMediaElementSource(
             this.bufferElement
         );
+
+        // * Inportant! No play back without this
+        // this.bufferSource.connect(this.ctx.destination);
 
         this.recorder = new MediaRecorder(stream);
 
@@ -75,12 +80,50 @@ export class Sampler {
 
         this.recorder.ondataavailable = (e) => {
             this.chunks.push(e.data);
+            console.log("chunked");
         };
 
         this.analyser = this.ctx.createAnalyser();
         this.analyser.fftSize = 2 ** 12; // 32768;
 
-        this.timeDateBuffer = new Uint8Array(this.analyser.frequencyBinCount);
+        this.timeDataBuffer = new Uint8Array(this.analyser.frequencyBinCount);
+    }
+
+    startRecord() {
+        this.recording = true;
+        this.micSource.connect(this.analyser);
+        this.recorder.start();
+    }
+
+    stopRecord() {
+        this.recording = false;
+        this.buffered = false;
+        this.micSource.disconnect(this.analyser);
+        this.recorder.stop();
+    }
+
+    startPlayback() {
+        this.playing = true;
+        //  this.bufferSource.connect(this.ctx.destination);
+        this.bufferSource.connect(this.analyser);
+        this.analyser.connect(this.ctx.destination);
+        this.bufferElement.play();
+    }
+
+    stopPlayback() {
+        this.playing = false;
+        this.bufferSource.disconnect(this.analyser);
+        this.analyser.disconnect(this.ctx.destination);
+        this.bufferElement.pause();
+    }
+
+    /**
+     *
+     * @returns {Uint8Array} The analyser byte time domain data
+     */
+    getTimeData() {
+        this.analyser.getByteTimeDomainData(this.timeDataBuffer);
+        return this.timeDataBuffer;
     }
 }
 
