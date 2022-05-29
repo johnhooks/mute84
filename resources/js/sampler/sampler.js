@@ -55,7 +55,7 @@ export class Sampler {
             this.bufferElement
         );
 
-        // * Inportant! No play back without this
+        // * Important! No play back without this
         // this.bufferSource.connect(this.ctx.destination);
 
         this.recorder = new MediaRecorder(stream);
@@ -63,8 +63,11 @@ export class Sampler {
         this.recorder.onstop = (_) => {
             console.log("data available after MediaRecorder.stop() called.");
 
+            console.log(this.recorder.mimeType)
             const blob = new Blob(this.chunks, {
-                type: "audio/ogg; codecs=opus",
+               // type: "audio/wav; codecs=audio/wav",
+               // just using the default mimeType seems to work better
+               type: this.recorder.mimeType
             });
 
             this.chunks = [];

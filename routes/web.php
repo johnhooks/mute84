@@ -25,6 +25,10 @@ Route::get('/sampler', function () {
     return view('sampler');
 });
 
+Route::get('/tapeloop-01', function () {
+    return view('player/tapeloop');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');

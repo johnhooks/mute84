@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        /** just for using ngrok */
+        // \Illuminate\Support\Facades\URL::forceScheme('https');
     }
 }

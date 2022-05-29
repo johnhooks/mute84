@@ -1,6 +1,7 @@
 {
     "/js/app.js": "/js/app.js",
     "/js/audio.js": "/js/audio.js",
+    "/js/player.js": "/js/player.js",
     "/js/sampler.js": "/js/sampler.js",
     "/js/polyfill.js": "/js/polyfill.js",
     "/css/app.css": "/css/app.css"
