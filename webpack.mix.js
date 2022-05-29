@@ -14,6 +14,8 @@ const LiveReloadPlugin = require("webpack-livereload-plugin");
 
 mix.js("resources/js/app.js", "public/js")
     .js("resources/js/audio.js", "public/js")
+    .js("resources/js/sampler.js", "public/js")
+    .js("resources/js/polyfill.js", "public/js")
     .postCss("resources/css/app.css", "public/css", [
         require("postcss-import"),
         require("tailwindcss"),

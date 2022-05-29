@@ -21,6 +21,9 @@ Route::get('/visualizer', function () {
     return view('visualizer');
 });
 
+Route::get('/sampler', function () {
+    return view('sampler');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

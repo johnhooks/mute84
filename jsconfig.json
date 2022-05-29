@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "checkJs": true,
+    "lib": ["DOM"]
+  },
+  "include": ["resources/js/**/*"],
+  "exclude": ["node_modules"]
+}
