@@ -92,7 +92,9 @@ async function init() {
         fragmentShader,
     });
 
-    const geometry = new THREE.PlaneGeometry(1, 1);
+    // The below code made a smaller plane that only used a quarter of the screen.
+    // const geometry = new THREE.PlaneGeometry(1, 1);
+    const geometry = new THREE.PlaneGeometry(2, 2);
 
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
