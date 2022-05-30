@@ -1,5 +1,6 @@
 /node_modules
 /public/hot
+/public/shaders
 /public/storage
 /public/css
 /public/js

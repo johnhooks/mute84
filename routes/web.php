@@ -29,6 +29,10 @@ Route::get('/tapeloop-01', function () {
     return view('player/tapeloop');
 });
 
+Route::get('/johnhooks/rush', function () {
+    return view('johnhooks/rush');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');

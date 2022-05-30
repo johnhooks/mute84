@@ -83,7 +83,7 @@ function drawTimeData() {
         canvasState.width * canvasState.scale,
         canvasState.height * canvasState.scale,
         0,
-        -8
+        -10
     );
     // ctx.clearRect(0, 0, WIDTH, HEIGHT);
     // 2. setup some canvas drawing

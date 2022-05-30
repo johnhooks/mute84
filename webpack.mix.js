@@ -16,6 +16,7 @@ mix.js("resources/js/app.js", "public/js")
     .js("resources/js/audio.js", "public/js")
     .js("resources/js/player.js", "public/js")
     .js("resources/js/sampler.js", "public/js")
+    .js("resources/js/three.js", "public/js")
     .js("resources/js/polyfill.js", "public/js")
     .postCss("resources/css/app.css", "public/css", [
         require("postcss-import"),
@@ -37,6 +38,9 @@ mix.js("resources/js/app.js", "public/js")
             poll: 1000,
         },
     });
+
+mix.extract(["alpinejs", "axios", "lodash", "three"]);
+mix.copyDirectory('resources/shaders', 'public/shaders');
 
 if (mix.inProduction()) {
     mix.version();
