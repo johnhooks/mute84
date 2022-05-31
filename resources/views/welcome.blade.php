@@ -53,6 +53,16 @@
                         mute84</a>
                 </div>
                 <div class="mt-3">
+                    <a href="{{ url('/scottswenson/it-flows-back') }}"
+                        class="text-base font-semibold text-indigo-600 hover:text-indigo-500">It Flows Back &ndash;
+                        scottswenson</a>
+                </div>
+                <div class="mt-3">
+                    <a href="{{ url('/scottswenson/ne2') }}"
+                        class="text-base font-semibold text-indigo-600 hover:text-indigo-500">NE2 &ndash;
+                        scottswenson</a>
+                </div>
+                <div class="mt-3">
                     <a href="{{ url('/johnhooks/rush') }}"
                         class="text-base font-semibold text-indigo-600 hover:text-indigo-500">rush &ndash; johnhooks</a>
                 </div>

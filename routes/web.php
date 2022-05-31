@@ -33,6 +33,15 @@ Route::get('/johnhooks/rush', function () {
     return view('johnhooks/rush');
 });
 
+Route::get('/scottswenson/ne2', function () {
+    return view('scottswenson/ne2');
+});
+
+Route::get('/scottswenson/it-flows-back', function () {
+    return view('scottswenson/it-flows-back');
+});
+
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');

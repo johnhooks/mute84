@@ -1,14 +1,26 @@
 import * as THREE from "three";
 
 let scene, camera, renderer, analyser, uniforms;
+
+/** @type {string} */
+let audioUrl;
+
+if (/johnhooks\/rush/.test(window.location.href)) {
+  audioUrl = "/storage/johnhooks_20220501_rush_take_4.MP3";
+} else if (/scottswenson\/it-flows-back/.test(window.location.href)) {
+  audioUrl = "/storage/scottswenson_it_flows_back.mp3";
+} else if (/scottswenson\/ne2/.test(window.location.href)) {
+  audioUrl = "/storage/scottswenson_ne2.mp3";
+}
 const loader = new THREE.FileLoader();
+const audioLoader = new THREE.AudioLoader();
 
 /**
  *
  * @param {string} url
  * @returns {Promise<string>}
  */
-function load(url) {
+function loadFile(url) {
   return new Promise((resolve, reject) => {
     loader.load(
       url,
@@ -26,15 +38,39 @@ function load(url) {
   });
 }
 
+/**
+ *
+ * @param {string} url
+ * @returns {Promise<AudioBuffer>}
+ */
+function loadAudio(url) {
+  return new Promise((resolve, reject) => {
+    audioLoader.load(
+      url,
+      data => {
+        resolve(data);
+      },
+      null,
+      e => reject(e)
+    );
+  });
+}
+
 const startButton = document.getElementById("startButton");
-startButton.addEventListener("click", init);
+startButton.addEventListener("click", () => {
+  try {
+    init();
+  } catch (e) {
+    console.log(e);
+  }
+});
 
 async function init() {
   const fftSize = 128;
 
   const [vertexShader, fragmentShader] = await Promise.all([
-    load("/shaders/visualizer.vert"),
-    load("/shaders/visualizer.frag"),
+    loadFile("/shaders/visualizer.vert"),
+    loadFile("/shaders/visualizer.frag"),
   ]);
 
   const overlay = document.getElementById("overlay");
@@ -61,31 +97,25 @@ async function init() {
   const listener = new THREE.AudioListener();
 
   const audio = new THREE.Audio(listener);
-  const url = "/storage/johnhooks_20220501_rush_take_4.MP3";
 
   if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
-    const loader = new THREE.AudioLoader();
-    loader.load(
-      url,
-      buffer => {
-        audio.setBuffer(buffer);
-        audio.play();
-      },
-      null,
-      error => {
-        throw error;
-      }
-    );
+    const buffer = await loadAudio(audioUrl);
+    audio.setBuffer(buffer);
+    audio.play();
   } else {
-    const mediaElement = new Audio(url);
+    const mediaElement = new Audio(audioUrl);
     mediaElement.play();
-
     audio.setMediaElementSource(mediaElement);
   }
 
   analyser = new THREE.AudioAnalyser(audio, fftSize);
 
   //
+
+  if (/scottswenson/.test(window.location.href)) {
+    analyser.analyser.maxDecibels = -50;
+    analyser.analyser.minDecibels = -110;
+  }
 
   const format = renderer.capabilities.isWebGL2 ? THREE.RedFormat : THREE.LuminanceFormat;
 
@@ -142,7 +172,7 @@ function animate() {
 }
 
 function render() {
-  analyser.getFrequencyData();
+  console.log(analyser.getFrequencyData());
 
   uniforms.tAudioData.value.needsUpdate = true;
 

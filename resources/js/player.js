@@ -28,7 +28,7 @@ import { Player } from "./sampler/player.js";
 import { Color } from "./color.js";
 import { FullscreenCanvas } from "./canvas.js";
 
-// const FRAMERATE = 1000 / 60;
+const FRAMERATE = 1000 / 30;
 
 let colorIndex = 0;
 // let sineIndex = 100;
@@ -51,7 +51,12 @@ buffer.onplay = () => {
 };
 
 async function getAudio() {
-  drawTimeData();
+  if (/scottswenson/.test(window.location.href)) {
+    player.analyser.maxDecibels = -50;
+    player.analyser.minDecibels = -150;
+  }
+
+  startLoop(drawTimeData);
   player.bufferSource.connect(player.analyser);
   player.analyser.connect(player.ctx.destination);
 }
@@ -97,7 +102,7 @@ function drawTimeData() {
 
   ctx.stroke();
   // call itself as soon as possible
-  requestAnimationFrame(() => drawTimeData());
+  // requestAnimationFrame(() => drawTimeData());
 }
 
 function shiftContext(ctx, w, h, dx, dy) {
@@ -112,4 +117,34 @@ function shiftContext(ctx, w, h, dx, dy) {
   );
   ctx.clearRect(0, 0, w, h);
   ctx.putImageData(imageData, 0, 0);
+}
+
+function startLoop(render) {
+  // limit update and render by target rates
+  let stop = false;
+  let last = 0;
+  let delta = 0;
+  let id;
+
+  /**
+   *
+   * @param {number} now
+   */
+  function loop(now) {
+    if (stop) return;
+    delta += now - last;
+    if (delta >= FRAMERATE) {
+      render(delta);
+      delta = 0;
+    }
+    last = now;
+    id = window.requestAnimationFrame(loop);
+  }
+
+  loop(delta); // not passing loop a number results in delta === NaN
+
+  return () => {
+    stop = true;
+    window.cancelAnimationFrame(id);
+  };
 }
