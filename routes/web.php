@@ -26,7 +26,7 @@ Route::get('/sampler', function () {
 });
 
 Route::get('/tapeloop-01', function () {
-    return view('player/tapeloop');
+    return view('player/tapeloop-01');
 });
 
 Route::get('/johnhooks/rush', function () {

@@ -1,175 +1,175 @@
 export class Color {
-    /** @type {number} */
-    steps;
-    /** @type {number} */
-    stepIndex;
-    /** @type {Color} */
-    to;
-    /** @type {Color} */
-    from;
+  /** @type {number} */
+  steps;
+  /** @type {number} */
+  stepIndex;
+  /** @type {Color} */
+  to;
+  /** @type {Color} */
+  from;
 
-    /** @type {number} */
-    r;
-    /** @type {number} */
-    g;
-    /** @type {number} */
-    b;
+  /** @type {number} */
+  r;
+  /** @type {number} */
+  g;
+  /** @type {number} */
+  b;
 
-    static black = new Color(0, 0, 0);
-    static white = new Color(255, 255, 255);
-    static red = new Color(255, 0, 0);
-    static green = new Color(0, 255, 0);
-    static blue = new Color(0, 0, 255);
+  static black = new Color(0, 0, 0);
+  static white = new Color(255, 255, 255);
+  static red = new Color(255, 0, 0);
+  static green = new Color(0, 255, 0);
+  static blue = new Color(0, 0, 255);
 
-    /**
-     *
-     * @param {number} r
-     * @param {number} g
-     * @param {number} b
-     */
-    constructor(r, g, b) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
+  /**
+   *
+   * @param {number} r
+   * @param {number} g
+   * @param {number} b
+   */
+  constructor(r, g, b) {
+    this.r = r;
+    this.g = g;
+    this.b = b;
+  }
+
+  /**
+   *
+   * @param {number} percent
+   * @returns {Color}
+   */
+  dim(percent) {
+    this.each(byte => Math.floor(byte * (percent / 100)));
+    return this;
+  }
+
+  /**
+   *
+   * @param {Color} color
+   * @param {number} steps
+   */
+  fadeTo(color, steps) {
+    this.to = color;
+    this.from = this.copy();
+    this.steps = steps;
+    this.stepIndex = 0;
+  }
+
+  stepFade() {
+    const bytes = ["r", "g", "b"];
+
+    for (let i = 0, len = bytes.length; i < len; i++) {
+      const byte = bytes[i];
+      const from = this.from[byte];
+      const to = this.to[byte];
+      const span = Math.abs(from - to);
+      const step = span / this.steps;
+      let diff = step * this.stepIndex;
+      if (from > to) {
+        this[byte] = Math.round(from - diff);
+      } else {
+        this[byte] = Math.round(from + diff);
+      }
     }
 
-    /**
-     *
-     * @param {number} percent
-     * @returns {Color}
-     */
-    dim(percent) {
-        this.each((byte) => Math.floor(byte * (percent / 100)));
-        return this;
+    this.stepIndex++;
+    if (this.stepIndex >= this.steps) {
+      this.to = this.from = undefined;
     }
+  }
 
-    /**
-     *
-     * @param {Color} color
-     * @param {number} steps
-     */
-    fadeTo(color, steps) {
-        this.to = color;
-        this.from = this.copy();
-        this.steps = steps;
-        this.stepIndex = 0;
+  /**
+   *
+   * @returns {boolean}
+   */
+  fading() {
+    return this.to instanceof Color;
+  }
+
+  /**
+   *
+   * @returns {Color}
+   */
+  copy() {
+    return new Color(this.r, this.g, this.b);
+  }
+
+  /**
+   *
+   * @param {Color} other
+   */
+  add(other) {
+    return this.map((byte, key) => {
+      byte += other[key];
+      return byte < 256 ? byte : 255;
+    });
+  }
+
+  /**
+   *
+   * @param {Color} other
+   */
+  subtract(other) {
+    return this.map((byte, key) => {
+      byte -= other[key];
+      return byte > 0 ? byte : 0;
+    });
+  }
+
+  /**
+   *
+   * @returns {string}
+   */
+  stringify() {
+    return `rgb(${this.r},${this.g},${this.b})`;
+  }
+
+  /**
+   *
+   * @param {(byte: number, key?:string) => void} fn
+   * @returns {void}
+   */
+  each(fn) {
+    const bytes = ["r", "g", "b"];
+    for (let i = 0, len = bytes.length; i < len; i++) {
+      this[bytes[i]] = fn(this[bytes[i]], bytes[i]);
     }
+  }
 
-    stepFade() {
-        const bytes = ["r", "g", "b"];
-
-        for (let i = 0, len = bytes.length; i < len; i++) {
-            const byte = bytes[i];
-            const from = this.from[byte];
-            const to = this.to[byte];
-            const span = Math.abs(from - to);
-            const step = span / this.steps;
-            let diff = step * this.stepIndex;
-            if (from > to) {
-                this[byte] = Math.round(from - diff);
-            } else {
-                this[byte] = Math.round(from + diff);
-            }
-        }
-
-        this.stepIndex++;
-        if (this.stepIndex >= this.steps) {
-            this.to = this.from = undefined;
-        }
+  /**
+   *
+   * @param {(byte: number, key?:string) => void} fn
+   * @returns {Color}
+   */
+  map(fn) {
+    const bytes = ["r", "g", "b"];
+    let color = new Color(0, 0, 0);
+    for (let i = 0, len = bytes.length; i < len; i++) {
+      color[bytes[i]] = fn(this[bytes[i]], bytes[i]);
     }
+    return color;
+  }
 
-    /**
-     *
-     * @returns {boolean}
-     */
-    fading() {
-        return this.to instanceof Color;
+  /**
+   *
+   * @param {number} wheelPos
+   * @returns {Color}
+   */
+  static wheel(wheelPos) {
+    wheelPos = 255 - wheelPos;
+    if (wheelPos < 85) {
+      return new Color(255 - wheelPos * 3, 0, wheelPos * 3);
     }
-
-    /**
-     *
-     * @returns {Color}
-     */
-    copy() {
-        return new Color(this.r, this.g, this.b);
+    if (wheelPos < 170) {
+      wheelPos -= 85;
+      return new Color(0, wheelPos * 3, 255 - wheelPos * 3);
     }
+    wheelPos -= 170;
+    return new Color(wheelPos * 3, 255 - wheelPos * 3, 0);
+  }
 
-    /**
-     *
-     * @param {Color} other
-     */
-    add(other) {
-        return this.map((byte, key) => {
-            byte += other[key];
-            return byte < 256 ? byte : 255;
-        });
-    }
-
-    /**
-     *
-     * @param {Color} other
-     */
-    subtract(other) {
-        return this.map((byte, key) => {
-            byte -= other[key];
-            return byte > 0 ? byte : 0;
-        });
-    }
-
-    /**
-     *
-     * @returns {string}
-     */
-    stringify() {
-        return `rgb(${this.r},${this.g},${this.b})`;
-    }
-
-    /**
-     *
-     * @param {(byte: number, key?:string) => void} fn
-     * @returns {void}
-     */
-    each(fn) {
-        const bytes = ["r", "g", "b"];
-        for (let i = 0, len = bytes.length; i < len; i++) {
-            this[bytes[i]] = fn(this[bytes[i]], bytes[i]);
-        }
-    }
-
-    /**
-     *
-     * @param {(byte: number, key?:string) => void} fn
-     * @returns {Color}
-     */
-    map(fn) {
-        const bytes = ["r", "g", "b"];
-        let color = new Color(0, 0, 0);
-        for (let i = 0, len = bytes.length; i < len; i++) {
-            color[bytes[i]] = fn(this[bytes[i]], bytes[i]);
-        }
-        return color;
-    }
-
-    /**
-     *
-     * @param {number} wheelPos
-     * @returns {Color}
-     */
-    static wheel(wheelPos) {
-        wheelPos = 255 - wheelPos;
-        if (wheelPos < 85) {
-            return new Color(255 - wheelPos * 3, 0, wheelPos * 3);
-        }
-        if (wheelPos < 170) {
-            wheelPos -= 85;
-            return new Color(0, wheelPos * 3, 255 - wheelPos * 3);
-        }
-        wheelPos -= 170;
-        return new Color(wheelPos * 3, 255 - wheelPos * 3, 0);
-    }
-
-    // prettier-ignore
-    static sineTable = [
+  // prettier-ignore
+  static sineTable = [
     128,131,134,137,140,143,146,149,152,155,158,162,165,167,170,173,
     176,179,182,185,188,190,193,196,198,201,203,206,208,211,213,215,
     218,220,222,224,226,228,230,232,234,235,237,238,240,241,243,244,
@@ -188,8 +188,8 @@ export class Color {
      79, 82, 85, 88, 90, 93, 97,100,103,106,109,112,115,118,121,124
   ];
 
-    // prettier-ignore
-    static gammaTable = [
+  // prettier-ignore
+  static gammaTable = [
       0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
       0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,
       1,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,  2,  3,  3,  3,  3,

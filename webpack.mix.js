@@ -12,36 +12,37 @@ const LiveReloadPlugin = require("webpack-livereload-plugin");
  |
  */
 
-mix.js("resources/js/app.js", "public/js")
-    .js("resources/js/audio.js", "public/js")
-    .js("resources/js/player.js", "public/js")
-    .js("resources/js/sampler.js", "public/js")
-    .js("resources/js/three.js", "public/js")
-    .js("resources/js/polyfill.js", "public/js")
-    .postCss("resources/css/app.css", "public/css", [
-        require("postcss-import"),
-        require("tailwindcss"),
-        require("autoprefixer"),
-    ])
-    .webpackConfig({
-        plugins: [
-            new LiveReloadPlugin({
-                ignore: /(node_modules)|(vendor)/,
-                // https://github.com/livereload/livereload-js/blob/master/src/options.js
-                ext: "js,css,php",
-            }),
-        ],
-        watchOptions: {
-            // https://webpack.js.org/configuration/watch/#watchoptionsignored
-            ignored: /(node_modules)|(vendor)/,
-            // https://webpack.js.org/configuration/watch/#watchoptionspoll
-            poll: 1000,
-        },
-    });
+mix
+  .js("resources/js/app.js", "public/js")
+  .js("resources/js/audio.js", "public/js")
+  .js("resources/js/player.js", "public/js")
+  .js("resources/js/sampler.js", "public/js")
+  .js("resources/js/three.js", "public/js")
+  .js("resources/js/polyfill.js", "public/js")
+  .postCss("resources/css/app.css", "public/css", [
+    require("postcss-import"),
+    require("tailwindcss"),
+    require("autoprefixer"),
+  ])
+  .webpackConfig({
+    plugins: [
+      new LiveReloadPlugin({
+        ignore: /(node_modules)|(vendor)/,
+        // https://github.com/livereload/livereload-js/blob/master/src/options.js
+        ext: "js,css,php",
+      }),
+    ],
+    watchOptions: {
+      // https://webpack.js.org/configuration/watch/#watchoptionsignored
+      ignored: /(node_modules)|(vendor)/,
+      // https://webpack.js.org/configuration/watch/#watchoptionspoll
+      poll: 1000,
+    },
+  });
 
 mix.extract(["alpinejs", "axios", "lodash", "three"]);
-mix.copyDirectory('resources/shaders', 'public/shaders');
+mix.copyDirectory("resources/shaders", "public/shaders");
 
 if (mix.inProduction()) {
-    mix.version();
+  mix.version();
 }

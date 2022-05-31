@@ -24,15 +24,10 @@
  * - record and playback buttons
  */
 
-import { Sampler } from "./sampler/sampler";
+import { Sampler } from "./sampler/sampler.js";
+import { FullscreenCanvas } from "./canvas.js";
 
-const FRAMERATE = 1000 / 60;
-
-const canvasState = initCanvas();
-
-const ctx = canvasState.context;
-const WIDTH = canvasState.width;
-const HEIGHT = canvasState.height;
+const canvas = new FullscreenCanvas(document.querySelector("main"));
 
 /** @type {HTMLButtonElement} */
 const record = document.querySelector("#record-btn");
@@ -46,53 +41,53 @@ const buffer = document.querySelector("#buffer");
 let sampler = new Sampler(buffer);
 
 function startRecord() {
-    record.classList.remove("bg-red-500", "hover:bg-red-700");
-    record.classList.add("bg-red-700");
+  record.classList.remove("bg-red-500", "hover:bg-red-700");
+  record.classList.add("bg-red-700");
 }
 
 function stopRecord() {
-    record.classList.remove("bg-red-700");
-    record.classList.add("bg-red-500", "hover:bg-red-700");
+  record.classList.remove("bg-red-700");
+  record.classList.add("bg-red-500", "hover:bg-red-700");
 }
 
 async function getAudio() {
-    await sampler.initialize();
+  await sampler.initialize();
 
-    visualize();
+  visualize();
 
-    record.onclick = function () {
-        if (sampler.recording) {
-            stopRecord();
-            sampler.stopRecord();
-            console.log(sampler.recorder.state);
-            console.log("recorder stopped");
-            play.disabled = false;
-        } else {
-            startRecord();
-            sampler.startRecord();
-            play.disabled = true;
-            console.log(sampler.recorder.state);
-            console.log("recorder started");
-        }
-    };
+  record.onclick = function () {
+    if (sampler.recording) {
+      stopRecord();
+      sampler.stopRecord();
+      console.log(sampler.recorder.state);
+      console.log("recorder stopped");
+      play.disabled = false;
+    } else {
+      startRecord();
+      sampler.startRecord();
+      play.disabled = true;
+      console.log(sampler.recorder.state);
+      console.log("recorder started");
+    }
+  };
 
-    play.onclick = function () {
-        // mediaRecorder.stop();
-        // console.log(mediaRecorder.state);
-        // console.log("recorder stopped");
+  play.onclick = function () {
+    // mediaRecorder.stop();
+    // console.log(mediaRecorder.state);
+    // console.log("recorder stopped");
 
-        // play.disabled = true;
-        // record.disabled = true;
-        if (!sampler.recording && sampler.buffered) {
-            // const track = audioCtx.createMediaElementSource(buffer);
-            // track.connect(audioCtx.destination);
-            if (sampler.playing) {
-                sampler.stopPlayback();
-            } else {
-                sampler.startPlayback();
-            }
-        }
-    };
+    // play.disabled = true;
+    // record.disabled = true;
+    if (!sampler.recording && sampler.buffered) {
+      // const track = audioCtx.createMediaElementSource(buffer);
+      // track.connect(audioCtx.destination);
+      if (sampler.playing) {
+        sampler.stopPlayback();
+      } else {
+        sampler.startPlayback();
+      }
+    }
+  };
 }
 
 /**
@@ -110,178 +105,107 @@ async function getAudio() {
  *
  */
 function visualize() {
-    // const frequencyData = new Uint8Array(bufferLength);
-    drawTimeData();
+  // const frequencyData = new Uint8Array(bufferLength);
+  drawTimeData();
 }
 
 function drawTimeData() {
-    // inject the time data into our timeData array
-    const timeData = sampler.getTimeData();
-    // now that we have the data, lets turn it into something visual
-    // 1. Clear the canvas
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-    ctx.fillRect(0, 0, WIDTH, HEIGHT);
-    // ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    // 2. setup some canvas drawing
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "#ffc600";
-    ctx.beginPath();
+  const ctx = canvas.context;
+  // inject the time data into our timeData array
+  const timeData = sampler.getTimeData();
+  // now that we have the data, lets turn it into something visual
+  // 1. Clear the canvas
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  // 2. setup some canvas drawing
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "#ffc600";
+  ctx.beginPath();
 
-    const sliceWidth = (WIDTH * canvasState.scale) / timeData.byteLength;
-    let x = 0;
+  const sliceWidth = canvas.pixelWidth / timeData.byteLength;
+  let x = 0;
 
-    for (let i = 0; i < timeData.byteLength; i++) {
-        const v = timeData[i] / 128;
-        const y = (v * HEIGHT) / 2;
+  for (let i = 0; i < timeData.byteLength; i++) {
+    const v = timeData[i] / 128;
+    const y = (v * canvas.height) / 2;
 
-        if (i === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
-        }
-
-        x += sliceWidth;
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
     }
 
-    ctx.stroke();
-    // call itself as soon as possible
-    requestAnimationFrame(() => drawTimeData());
+    x += sliceWidth;
+  }
+
+  ctx.stroke();
+  // call itself as soon as possible
+  requestAnimationFrame(() => drawTimeData());
 }
 
 getAudio();
 
-/**
- * Canvas State Object
- * @typedef {Object} CanvasState
- * @property {number} width - Indicates whether the Courage component is present.
- * @property {number} height - Indicates whether the Power component is present.
- * @property {number} scale - Indicates whether the Wisdom component is present.
- * @property {HTMLCanvasElement} canvas
- * @property {CanvasRenderingContext2D} context
- */
+// class Visualizer {
+//   active = false;
 
-/**
- *
- * @param {HTMLCanvasElement} canvas
- * @param {CanvasRenderingContext2D} context
- * @returns {CanvasState}
- */
-function initState(canvas, context) {
-    return configSize({
-        canvas,
-        context,
-        scale: window.devicePixelRatio === 2 ? 2 : 1,
-        width: 0,
-        height: 0,
-    });
-}
+//   /**  @type {CanvasState} */
+//   state;
 
-/**
- *
- * @param {CanvasState} state - The canvas state object
- * @returns {CanvasState}
- */
-function configSize(state) {
-    return { ...state, width: window.innerWidth, height: window.innerHeight };
-}
+//   /** @type {(state: CanvasState) => void} */
+//   update;
 
-/**
- *
- * @param {CanvasState} state - The canvas state object
- */
-function configCanvas({ canvas, context, width, height, scale }) {
-    // Set canvas size and adjust for high res displays using jqueryMap references
-    canvas.setAttribute("width", String(width * scale));
-    canvas.setAttribute("height", String(height * scale));
+//   /**
+//    *
+//    * @param {CanvasState} state
+//    * @param {(state: CanvasState) => void} update
+//    */
+//   constructor(state, update) {
+//     this.state = state;
+//     this.update = update;
+//   }
 
-    // Resize of style is the same despite scale
-    canvas.style.width = width + "px";
-    canvas.style.height = height + "px";
+//   stop() {
+//     this.active = false;
+//   }
 
-    // Configuring the canvas resets the context somehow
-    context.scale(scale, scale);
-}
+//   loop() {
+//     if (this.active) {
+//     }
+//   }
+// }
 
-/**
- * @returns {CanvasState}
- */
-export function initCanvas() {
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-    let state = initState(canvas, context);
+// /**
+//  *
+//  * @param {(delta: number) => void} render
+//  * @returns {() => void} Stop the loop
+//  */
+// function startLoop(render) {
+//   // limit update and render by target rates
+//   let stop = false;
+//   let last = 0;
+//   let delta = 0;
+//   let id;
 
-    canvas.id = "fullscreen";
-    document.body.appendChild(canvas);
-    configCanvas(state);
+//   /**
+//    *
+//    * @param {number} now
+//    */
+//   function loop(now) {
+//     if (stop) return;
+//     delta += now - last;
+//     if (delta >= FRAMERATE) {
+//       render(delta);
+//       delta = 0;
+//     }
+//     last = now;
+//     id = window.requestAnimationFrame(loop);
+//   }
 
-    window.addEventListener("resize", function () {
-        state = configSize(state);
-        configCanvas(state);
-    });
+//   loop(delta); // not passing loop a number results in delta === NaN
 
-    return state;
-}
-
-class Visualizer {
-    active = false;
-
-    /**  @type {CanvasState} */
-    state;
-
-    /** @type {(state: CanvasState) => void} */
-    update;
-
-    /**
-     *
-     * @param {CanvasState} state
-     * @param {(state: CanvasState) => void} update
-     */
-    constructor(state, update) {
-        this.state = state;
-        this.update = update;
-    }
-
-    stop() {
-        this.active = false;
-    }
-
-    loop() {
-        if (this.active) {
-        }
-    }
-}
-
-/**
- *
- * @param {(delta: number) => void} render
- * @returns {() => void} Stop the loop
- */
-function startLoop(render) {
-    // limit update and render by target rates
-    let stop = false;
-    let last = 0;
-    let delta = 0;
-    let id;
-
-    /**
-     *
-     * @param {number} now
-     */
-    function loop(now) {
-        if (stop) return;
-        delta += now - last;
-        if (delta >= FRAMERATE) {
-            render(delta);
-            delta = 0;
-        }
-        last = now;
-        id = window.requestAnimationFrame(loop);
-    }
-
-    loop(delta); // not passing loop a number results in delta === NaN
-
-    return () => {
-        stop = true;
-        window.cancelAnimationFrame(id);
-    };
-}
+//   return () => {
+//     stop = true;
+//     window.cancelAnimationFrame(id);
+//   };
+// }
