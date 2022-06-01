@@ -22,9 +22,8 @@ export class Player {
 
     this.analyser = this.ctx.createAnalyser();
 
-    this.analyser.fftSize = 1024; // 32768;
+    this.analyser.fftSize = 2048; // 32768;
     this.timeDataBuffer = new Uint8Array(this.analyser.frequencyBinCount);
-
     this.bufferSource.connect(this.analyser);
     this.analyser.connect(this.ctx.destination);
   }

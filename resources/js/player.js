@@ -31,34 +31,41 @@ import { FullscreenCanvas } from "./canvas.js";
 const FRAMERATE = 1000 / 30;
 
 let colorIndex = 0;
-// let sineIndex = 100;
 
 const canvas = new FullscreenCanvas(document.querySelector("main"));
 
 /** @type {HTMLAudioElement} */
-const buffer = document.querySelector("#tapeloop");
-
-// console.log(MediaRecorder.isTypeSupported("audio/wav;codecs=MS_PCM"));
+const buffer = document.querySelector("#audio");
+const button = document.querySelector("#play-btn");
 
 /** @type {Player} */
 let player;
+let playing = false;
 
-buffer.onplay = () => {
+button.addEventListener("click", () => {
   if (!player) {
     player = new Player(buffer);
     getAudio();
   }
-};
+
+  if (!playing) {
+    player.bufferElement.play();
+    document.querySelector("#play")?.classList?.add("hidden");
+    document.querySelector("#pause")?.classList?.remove("hidden");
+  } else {
+    player.bufferElement.pause();
+    document.querySelector("#play")?.classList?.remove("hidden");
+    document.querySelector("#pause")?.classList?.add("hidden");
+  }
+  playing = !playing;
+});
 
 async function getAudio() {
   if (/scottswenson/.test(window.location.href)) {
     player.analyser.maxDecibels = -50;
     player.analyser.minDecibels = -150;
   }
-
   startLoop(drawTimeData);
-  player.bufferSource.connect(player.analyser);
-  player.analyser.connect(player.ctx.destination);
 }
 
 function drawTimeData() {
@@ -71,7 +78,7 @@ function drawTimeData() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // ctx.filter = 'blur(4px)';
-  shiftContext(ctx, canvas.pixelWidth, canvas.pixelHeight, 0, -10);
+  shiftContext(ctx, canvas.pixelWidth, canvas.pixelHeight, 0, -8);
   // ctx.clearRect(0, 0, WIDTH, HEIGHT);
   // 2. setup some canvas drawing
   ctx.lineWidth = 2;
