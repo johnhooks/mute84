@@ -7,13 +7,11 @@ const loader = new THREE.FileLoader();
 let scene, camera, renderer, analyser, uniforms;
 
 /**
- * TODO: This will not work, the cancel needs to be outside of the animate function.
- * this will just continually create a new cancel variable.
  * @param {HTMLAudioElement} mediaElement
  * @param {HTMLElement} container
  */
 export async function init(mediaElement, container) {
-  const fftSize = 128;
+  const fftSize = 512;
 
   const resizeObserver = new ElementResizeObserver(container);
   const u_resolution = new THREE.Vector2(resizeObserver.width, resizeObserver.height);

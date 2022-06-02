@@ -13,7 +13,7 @@
                         class="text-base font-semibold text-indigo-600 hover:text-indigo-500">Upload new audio file</a>
                 </div>
                 <div id="visualizer" x-data="visualizer"
-                    style="height: 50px; box-sizing: border-box; background-color: rgb(79 70 229)">
+                    style="height: 100px; box-sizing: border-box; background-color: rgb(33 31 147)">
                     {{-- <canvas x-ref="canvas" height="50" style="height: 50px"></canvas> --}}
                 </div>
                 <div class="p-6 bg-white border-b border-gray-200">

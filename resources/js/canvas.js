@@ -80,29 +80,60 @@ export class FullscreenCanvas {
   }
 }
 
-class Resizer {
-  /** @type {number} */
+/**
+ * Interface for classes that represent a resizer.
+ *
+ * @interface
+ */
+export class Resizer {
+  /**
+   * @type {number}
+   * @protected
+   */
   _width;
 
-  /** @type {number} */
+  /**
+   * @type {number}
+   * @protected
+   * */
   _height;
 
   /**
    * @type {ResizeListener}
+   * @public
    */
   onresize;
 
-  /** @type {number} */
+  /**
+   * Implementation required
+   * @abstract
+   * @returns {void}
+   */
+  dispose() {
+    throw new Error("You have to implement the method dispose!");
+  }
+
+  /**
+   * @type {number}
+   * @public
+   * */
   get width() {
     return this._width;
   }
 
-  /** @type {number} */
+  /**
+   * @type {number}
+   * @public
+   */
   get height() {
     return this._height;
   }
 }
 
+/**
+ * Class to observe window resize.
+ * @implements {Resizer}
+ */
 export class WindowResizeObserver extends Resizer {
   constructor() {
     super();
@@ -123,8 +154,15 @@ export class WindowResizeObserver extends Resizer {
   };
 }
 
+/**
+ * Class to observe element resize.
+ * @implements {Resizer}
+ */
 export class ElementResizeObserver extends Resizer {
-  /** @type {HTMLElement} */
+  /**
+   * @type {HTMLElement}
+   * @private
+   */
   _element;
 
   /** @type {ResizeObserver} */
@@ -137,7 +175,10 @@ export class ElementResizeObserver extends Resizer {
     super();
 
     this._element = element;
-    this._height = 50;
+
+    // TODO allow selection of just one direction to observe
+    this._height = element.getBoundingClientRect().height;
+    this._width = element.getBoundingClientRect().width;
 
     /** @type {ResizeObserverCallback} */
     const observer = entries => {
@@ -150,8 +191,10 @@ export class ElementResizeObserver extends Resizer {
           : entry.contentBoxSize;
 
         this._width = contentBoxSize.inlineSize;
+        this._height = contentBoxSize.blockSize;
       } else {
         this._width = entry.contentRect.width;
+        this._height = entry.contentRect.height;
       }
 
       if (this.onresize !== undefined) {
