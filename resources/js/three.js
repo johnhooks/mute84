@@ -172,7 +172,7 @@ function animate() {
 }
 
 function render() {
-  console.log(analyser.getFrequencyData());
+  analyser.getFrequencyData();
 
   uniforms.tAudioData.value.needsUpdate = true;
 

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\FileUpload;
 
 /*
@@ -46,8 +47,6 @@ Route::get('/scottswenson/it-flows-back', function () {
 });
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', [Dashboard::class, 'show'])->middleware(['auth'])->name('dashboard');
 
 require __DIR__ . '/auth.php';

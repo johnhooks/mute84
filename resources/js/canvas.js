@@ -1,4 +1,8 @@
 /**
+ * @typedef {(data: {width: number, height: number}) => void} ResizeListener
+ */
+
+/**
  * Class representing a canvas element.
  */
 export class FullscreenCanvas {
@@ -74,4 +78,93 @@ export class FullscreenCanvas {
     this.pixelWidth = pixelWidth;
     this.pixelHeight = pixelHeight;
   }
+}
+
+class Resizer {
+  /** @type {number} */
+  _width;
+
+  /** @type {number} */
+  _height;
+
+  /**
+   * @type {ResizeListener}
+   */
+  onresize;
+
+  /** @type {number} */
+  get width() {
+    return this._width;
+  }
+
+  /** @type {number} */
+  get height() {
+    return this._height;
+  }
+}
+
+export class WindowResizeObserver extends Resizer {
+  constructor() {
+    super();
+
+    window.addEventListener("resize", this.handleResize);
+  }
+
+  handleResize = () => {
+    this._width = window.innerWidth;
+    this._height = window.innerHeight;
+    if (this.onresize !== undefined) {
+      this.onresize({ width: this.width, height: this.height });
+    }
+  };
+
+  dispose = () => {
+    window.removeEventListener("resize", this.handleResize);
+  };
+}
+
+export class ElementResizeObserver extends Resizer {
+  /** @type {HTMLElement} */
+  _element;
+
+  /** @type {ResizeObserver} */
+  _resizeObserver;
+
+  /**
+   * @param {HTMLElement} element
+   */
+  constructor(element) {
+    super();
+
+    this._element = element;
+    this._height = 100;
+
+    /** @type {ResizeObserverCallback} */
+    const observer = entries => {
+      const entry = entries[0];
+
+      if (entry.contentBoxSize) {
+        // Firefox implements `contentBoxSize` as a single content rect, rather than an array
+        const contentBoxSize = Array.isArray(entry.contentBoxSize)
+          ? entry.contentBoxSize[0]
+          : entry.contentBoxSize;
+
+        this._width = contentBoxSize.inlineSize;
+      } else {
+        this._width = entry.contentRect.width;
+      }
+
+      if (this.onresize !== undefined) {
+        this.onresize({ width: this._width, height: this._height });
+      }
+    };
+
+    this._resizeObserver = new ResizeObserver(observer);
+
+    this._resizeObserver.observe(element);
+  }
+
+  dispose = () => {
+    this._resizeObserver.unobserve(this._element);
+  };
 }

@@ -14,6 +14,13 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+    </style>
+
     <!-- Scripts -->
     <script src="{{ mix('js/manifest.js') }}" defer></script>
     <script src="{{ mix('js/vendor.js') }}" defer></script>

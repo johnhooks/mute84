@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\File;
 
+
 class FileUpload extends Controller
 {
     public function createForm()
@@ -17,14 +18,17 @@ class FileUpload extends Controller
     {
         $user = Auth::user();
         $req->validate([
-            'file' => 'required|mimetypes:audio/mpeg|max:8000'
+            'file' => 'required|mimetypes:audio/mpeg|max:8000',
+            'name' => 'required|min:1|max:128'
         ]);
-        $fileModel = new File;
+
+        $fileModel = new File();
+
         if ($req->file()) {
             $fileName = time() . '_' . $req->file->getClientOriginalName();
-            $filePath = $req->file('file')->storeAs('uploads', $fileName, 'public');
+            $filePath = $req->file('file')->store('uploads', 'public');
             $fileModel->user_id = $user->id;
-            $fileModel->name = time() . '_' . $req->file->getClientOriginalName();
+            $fileModel->name = $req->name;
             $fileModel->file_path = '/storage/' . $filePath;
             $fileModel->save();
             return back()
