@@ -137,7 +137,7 @@ export class ElementResizeObserver extends Resizer {
     super();
 
     this._element = element;
-    this._height = 100;
+    this._height = 50;
 
     /** @type {ResizeObserverCallback} */
     const observer = entries => {
