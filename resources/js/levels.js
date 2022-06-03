@@ -22,7 +22,7 @@ export async function init(mediaElement, container) {
 
   const [vertexShader, fragmentShader] = await Promise.all([
     loadFile("/shaders/visualizer.vert"),
-    loadFile("/shaders/visualizer-sm.frag"),
+    loadFile("/shaders/visualizer-02.frag"),
   ]);
 
   {
