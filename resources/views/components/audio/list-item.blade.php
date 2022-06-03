@@ -42,9 +42,9 @@
                         </form>
                     @endif
                     <div class="flex">
-                        <x-play-icon class="inline-block text-gray-400"
+                        <x-play-icon class="inline-block text-gray-400 h-6 w-6"
                             x-show="!($store.player.url === $data.url && $store.player.playing)" />
-                        <x-pause-icon class="inline-block text-gray-400" x-cloak
+                        <x-pause-icon class="inline-block text-gray-400 h-6 w-6" x-cloak
                             x-show="$store.player.url === $data.url && $store.player.playing" />
                     </div>
                 </div>

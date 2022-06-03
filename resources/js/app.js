@@ -18,6 +18,16 @@ document.addEventListener("alpine:init", () => {
     playing: false,
 
     play(url) {
+      if (!url) {
+        if (this.playing) {
+          audio.pause();
+          this.playing = false;
+        } else {
+          audio.play();
+          this.playing = true;
+        }
+        return;
+      }
       if (url === this.url) {
         if (audio.paused) {
           audio.play();
@@ -61,8 +71,13 @@ document.addEventListener("alpine:init", () => {
   Alpine.data("visualizer", () => {
     return {
       running: false,
+
       init() {
         // const dispose = levels.init(audio, this.$root);
+      },
+
+      toggle() {
+        Alpine.store("player").play();
       },
     };
   });
