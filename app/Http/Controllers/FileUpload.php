@@ -29,7 +29,7 @@ class FileUpload extends Controller
             $filePath = $req->file('file')->store('uploads', 'public');
             $fileModel->user_id = $user->id;
             $fileModel->name = $req->name;
-            $fileModel->file_path = '/storage/' . $filePath;
+            $fileModel->file_path = $filePath;
             $fileModel->save();
             return back()
                 ->with('success', 'File has been uploaded.')
