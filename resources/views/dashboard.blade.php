@@ -18,7 +18,7 @@
                 </div>
             </div>
 
-            <h3 class="text-xl font-semibold text-gray-800 py-4">Audio List</h3>
+            <h3 class="text-xl font-semibold text-gray-800 py-4 sm:py-6 px-4 sm:px-0">Audio List</h3>
 
             <div class="bg-white shadow overflow-hidden sm:rounded-md">
                 <ul role="list" class="divide-y divide-gray-200">
