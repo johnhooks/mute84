@@ -43,6 +43,18 @@ document.addEventListener("alpine:init", () => {
       play() {
         Alpine.store("player").play(url);
       },
+      /**
+       *
+       * @param {SubmitEvent} e
+       */
+      confirm(e) {
+        if (confirm("Are you really sure you want to do this?!?") === false) {
+          // Stop the click event from propagating to the player.
+          e.stopImmediatePropagation();
+          // Prevent the form submit.
+          e.preventDefault();
+        }
+      },
     };
   });
 

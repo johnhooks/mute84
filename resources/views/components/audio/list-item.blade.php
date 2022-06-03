@@ -1,18 +1,56 @@
-@props(['file'])
+@props(['file', 'user'])
 
-<div class="flex pt-2" x-data="audio('{{ storage_url($file->file_path) }}')">
-    <div class="flex text-gray-500 hover:text-indigo-500 cursor-pointer" x-on:click="play">
-        <span>
-            <x-play-icon x-show="!($store.player.url === $data.url && $store.player.playing)" />
-            <x-pause-icon x-cloak x-show="$store.player.url === $data.url && $store.player.playing" />
-        </span>
-        <span class="pl-4  cursor-pointer">{{ $file->name }}</span>
+<li x-data="audio('{{ storage_url($file->file_path) }}')">
+    <div class="block hover:bg-gray-50" x-on:click="play">
+        <div class="px-4 py-4 flex items-center sm:px-6">
+            <div class="flex items-center justify-between w-full">
+                <div class="truncate">
+                    <div class="flex text-sm">
+                        <p class="font-medium text-indigo-600 truncate">{{ $file->name }}</p>
+                    </div>
+                    <div class="mt-2 flex">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <!-- Heroicon name: solid/user -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <p>
+                                {{ $file->user->name }}
+                            </p>
+                            @if ($file->user_id === $user->id)
+                                <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+                                    <!-- Heroicon name: solid/trash -->
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+
+                                <form action="{{ route('files.destroy', ['id' => $file->id]) }}" method="POST"
+                                    x-on:submit="confirm">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button type="submit" class="text-indigo-500 hover:text-indigo-300">delete</button>
+                                </form>
+
+                                </p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-0 ml-5">
+                    <div class="flex">
+                        <x-play-icon class="inline-block text-gray-400"
+                            x-show="!($store.player.url === $data.url && $store.player.playing)" />
+                        <x-pause-icon class="inline-block text-gray-400" x-cloak
+                            x-show="$store.player.url === $data.url && $store.player.playing" />
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <span class=" pl-4">
-        <form action="{{ route('files.destroy', ['id' => $file->id]) }}" method="POST">
-            @method('DELETE')
-            @csrf
-            <button type="submit" class="text-indigo-500 hover:text-indigo-300">delete</button>
-        </form>
-    </span>
-</div>
+</li>
