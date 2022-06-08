@@ -33,6 +33,10 @@ Route::get('/visualizer', function () {
     return view('visualizer');
 });
 
+Route::get('/visualizer/02', function () {
+    return view('visualizer/visualizer-02');
+});
+
 Route::get('/sampler', function () {
     return view('sampler');
 });

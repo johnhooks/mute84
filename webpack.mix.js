@@ -18,6 +18,7 @@ mix
   .js("resources/js/player.js", "public/js")
   .js("resources/js/sampler.js", "public/js")
   .js("resources/js/three.js", "public/js")
+  .js("resources/js/effect-01.js", "public/js")
   .js("resources/js/polyfill.js", "public/js")
   .postCss("resources/css/app.css", "public/css", [
     require("postcss-import"),
