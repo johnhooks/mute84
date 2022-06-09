@@ -1,6 +1,7 @@
 import * as THREE from "three";
 
 const LABEL_TEXT = "mute84";
+const FFT_SIZE = 512;
 
 const clock = new THREE.Clock();
 const scene = new THREE.Scene();
@@ -45,7 +46,7 @@ orthoCamera.position.set(0, 0, 1);
 orthoCamera.lookAt(new THREE.Vector3(0, 0, 0));
 
 // Create a plane geometry that spawns either the entire
-// viewport height or width depending on which one is bigger
+// viewport height or width depending on which one is bigger. NOTE: its the smaller not bigger
 const labelMeshSize = innerWidth > innerHeight ? innerHeight : innerWidth;
 const labelGeometry = new THREE.PlaneBufferGeometry(labelMeshSize, labelMeshSize);
 
@@ -88,6 +89,69 @@ const labelMaterial = new THREE.MeshBasicMaterial({
 // Create a plane mesh, add it to the scene
 const labelMesh = new THREE.Mesh(labelGeometry, labelMaterial);
 scene.add(labelMesh);
+
+const mediaElement = document.querySelector("#audio");
+const listener = new THREE.AudioListener();
+const audio = new THREE.Audio(listener);
+const analyser = new THREE.AudioAnalyser(audio, FFT_SIZE);
+const format = renderer.capabilities.isWebGL2 ? THREE.RedFormat : THREE.LuminanceFormat;
+const tAudioData = new THREE.DataTexture(analyser.data, FFT_SIZE / 2, 1, format);
+
+const levelsScene = new THREE.Scene();
+
+const levelsGeometry = new THREE.PlaneGeometry(1.9, 0.5);
+
+const levelsMaterial = new THREE.ShaderMaterial({
+  opacity: 0.0,
+  transparent: true,
+  uniforms: {
+    tAudioData: {
+      value: tAudioData,
+    },
+  },
+  vertexShader: `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = vec4(position, 1.0);
+  }
+  `,
+  fragmentShader: `
+  #ifdef GL_ES
+  precision mediump float;
+  #endif
+
+  uniform sampler2D tAudioData;
+
+  varying vec2 vUv;
+  void main() {
+    // lowest frequency
+    float low = texture2D(tAudioData, vec2(0.0, 0.0)).r;
+    // background red
+    float r = smoothstep(0.4, 0.9, low);
+    // audio data
+    float f = max(texture2D(tAudioData, vec2(vUv.x, 0.0)).r, 0.025);
+    // levels color
+    vec3 color = vec3(mix(0.3, 1.0, f), 0.3, mix(0.89, 0.6, f));
+    // modulated by lowest frequency
+    // vec3 backgroundColor = vec3(mix(0.1, 0.3, r), 0.1, 0.6);
+    // inside of level check
+    float i = step(vUv.y, f) * step(f - 0.025, vUv.y);
+
+    gl_FragColor = mix(vec4(0.0), vec4(color, 1.0), i);
+  }
+  `,
+});
+
+const levelsMesh = new THREE.Mesh(levelsGeometry, levelsMaterial);
+levelsScene.add(levelsMesh);
+
+audio.setMediaElementSource(mediaElement);
+
+document.onclick = event => {
+  audio.context.resume();
+  mediaElement.play();
+};
 
 // Create a second scene that will hold our fullscreen plane
 const postFXScene = new THREE.Scene();
@@ -238,6 +302,10 @@ function onMouseMove(e) {
 }
 
 function onAnimLoop() {
+  // Update the data for levels animation
+  analyser.getFrequencyData();
+  levelsMesh.material.uniforms.tAudioData.value.needsUpdate = true;
+
   // Do not clear the contents of the canvas on each render
   // In order to achieve our effect, we must draw the new frame
   // on top of the previous one!
@@ -248,7 +316,8 @@ function onAnimLoop() {
 
   // On each new frame, render the scene to renderBufferA
   renderer.render(postFXScene, orthoCamera);
-  renderer.render(scene, orthoCamera);
+  // renderer.render(scene, orthoCamera);
+  renderer.render(levelsScene, orthoCamera);
 
   // Set the device screen as the framebuffer to render to
   // In WebGL, framebuffer "null" corresponds to the default framebuffer!
