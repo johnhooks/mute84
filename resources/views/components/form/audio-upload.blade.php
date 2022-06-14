@@ -56,7 +56,7 @@
             </div>
         </div>
         @if (isset($error))
-            <p class="mt-2 text-sm text-red-600" id="email-error">
+            <p class="mt-2 text-sm text-red-600">
                 {{ $error }}
             </p>
         @endif

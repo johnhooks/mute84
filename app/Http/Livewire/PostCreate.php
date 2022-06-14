@@ -75,12 +75,12 @@ class PostCreate extends Component
 
   public function mount(Post $post)
   {
-    $model = $post ?? new Post;
-
-    $this->title = $model->title;
-    $this->description = $model->description;
-    $this->slug = $model->slug;
-    $this->status = $model->status;
+    $this->fill([
+      'title' => $post->title,
+      'description' => $post->description,
+      'slug' => $post->slug,
+      'status' => $post->status,
+    ]);
   }
 
   public function updatedTitle()

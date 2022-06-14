@@ -26,6 +26,18 @@ class Post extends Model
     ];
 
     /**
+     * The attribute default values.
+     *
+     * @var array<string, string>
+     */
+    protected $attributes = [
+        'title' => '',
+        'description' => '',
+        'slug' => '',
+        'status' => 'draft',
+    ];
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>

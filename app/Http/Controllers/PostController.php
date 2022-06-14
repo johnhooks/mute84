@@ -29,11 +29,7 @@ class PostController extends Controller
         $this->authorize('post.create');
 
         return view('post.create', [
-            'options' => [
-                ['value' => 'draft', 'label' => 'Draft'],
-                ['value' => 'unlisted', 'label' => 'Unlisted'],
-                ['value' => 'posted', 'label' => 'Posted'],
-            ]
+            'post' => new Post,
         ]);
     }
 
