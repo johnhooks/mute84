@@ -10,10 +10,22 @@ class File extends Model
     use HasFactory;
 
     /**
-     * Get the post that owns the comment.
+     * Get the user that owns the file.
+     *
+     * @return \App\Models\User
      */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the post the file owns.
+     *
+     * @return \App\Models\Post
+     */
+    public function post()
+    {
+        return $this->hasOne(Post::class);
     }
 }

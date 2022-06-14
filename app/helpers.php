@@ -2,10 +2,10 @@
 
 if (!function_exists('storage_url')) {
   /**
-   * Determine if the given post can be deleted by the user.
+   * Return the file storage url of the file path
    *
-   * @param  string  $file_path - The storage file path
-   * @return string
+   * @param  string $file_path - The storage file path
+   * @return string The file url
    */
   function storage_url(string $file_path)
   {

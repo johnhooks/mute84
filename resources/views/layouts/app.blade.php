@@ -14,18 +14,16 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
-    <style>
-        [x-cloak] {
-            display: none !important;
-        }
-
-    </style>
+    @livewireStyles
 
     <!-- Scripts -->
     <script src="{{ mix('js/manifest.js') }}" defer></script>
     <script src="{{ mix('js/vendor.js') }}" defer></script>
     <script src="{{ mix('js/app.js') }}" defer></script>
+
+
     {{ $scripts ?? '' }}
+
     @if (config('app.env') == 'local')
         <script src="http://localhost:35729/livereload.js"></script>
     @endif
@@ -36,8 +34,8 @@
         @include('layouts.navigation')
 
         <!-- Page Heading -->
-        <header class="bg-white shadow hidden sm:block">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <header class="hidden bg-white shadow sm:block">
+            <div class="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
                 {{ $header }}
             </div>
         </header>
@@ -47,6 +45,8 @@
             {{ $slot }}
         </main>
     </div>
+
+    @livewireScripts
 </body>
 
 </html>

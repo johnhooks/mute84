@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\FileUpload;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +25,20 @@ Route::get('/upload-file', [FileUpload::class, 'createForm'])->middleware(['auth
 Route::post('/upload-file', [FileUpload::class, 'fileUpload'])->middleware(['auth'])->name('fileUpload');
 
 Route::controller(FileController::class)->group(function () {
-    Route::get('/files/{id}', 'show');
-    Route::post('/files', 'store');
+    Route::get('/files/{id}', 'show')->name('files.show');
     Route::delete('/files/{id}', 'destroy')->name('files.destroy');
+    Route::post('/files', 'store');
+});
+
+Route::get('/users/{user:slug}/audio/{post:slug}', function (App\Models\User $user, App\Models\Post $post) {
+    return $post;
+});
+
+Route::controller(PostController::class)->group(function () {
+    Route::get('/posts/create', 'create')->name('posts.create');
+    Route::get('/posts/{id}', 'show')->name('posts.show');
+    Route::get('/posts', 'index')->name('posts.list');
+    Route::post('/posts', 'store');
 });
 
 Route::get('/visualizer', function () {

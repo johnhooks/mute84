@@ -1,6 +1,8 @@
 ## Installed Packages
 
--   `laravel/breeze`
+- `laravel/breeze`
+- `spatie/laravel-permission`
+- `livewire/livewire`
 
 ## Laravel Mix
 
@@ -20,5 +22,5 @@ To use LiveReload with Sail, the LiveReload server needs to be exposed. Add the 
 
 ```yaml
 ports:
-    - 35729:35729
+  - 35729:35729
 ```

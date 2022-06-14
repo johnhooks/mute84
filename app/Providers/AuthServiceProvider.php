@@ -15,6 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Models\File' => 'App\Policies\FilePolicy',
+        'App\Models\Post' => 'App\Policies\PostPolicy',
     ];
 
     /**
@@ -26,6 +27,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // Implicitly grant "super" role all permission checks using can()
+        Gate::before(function ($user, $ability) {
+            if ($user->hasRole('super')) {
+                return true;
+            }
+        });
     }
 }
