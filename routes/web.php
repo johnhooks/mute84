@@ -30,12 +30,9 @@ Route::controller(FileController::class)->group(function () {
     Route::post('/files', 'store');
 });
 
-Route::get('/users/{user:slug}/audio/{post:slug}', function (App\Models\User $user, App\Models\Post $post) {
-    return $post;
-});
-
 Route::controller(PostController::class)->group(function () {
     Route::get('/posts/create', 'create')->name('posts.create');
+    Route::get('/posts/{id}/edit', 'edit')->name('posts.edit');
     Route::get('/posts/{id}', 'show')->name('posts.show');
     Route::get('/posts', 'index')->name('posts.list');
     Route::post('/posts', 'store');
@@ -69,7 +66,10 @@ Route::get('/scottswenson/it-flows-back', function () {
     return view('scottswenson/it-flows-back');
 });
 
-
 Route::get('/dashboard', [Dashboard::class, 'show'])->middleware(['auth'])->name('dashboard');
+
+Route::get('/{user:slug}/audio/{post:slug}', function (App\Models\User $user, App\Models\Post $post) {
+    return view('post.show', ['post' => $post]);
+});
 
 require __DIR__ . '/auth.php';

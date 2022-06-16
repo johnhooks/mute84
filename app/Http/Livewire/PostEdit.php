@@ -11,11 +11,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\TemporaryUploadedFile;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Validator;
 
-class PostCreate extends Component
+class PostEdit extends Component
 {
   use AuthorizesRequests;
   use WithFileUploads;
@@ -34,20 +34,13 @@ class PostCreate extends Component
    */
   public $file;
 
-  /**
-   * Boolean of whether the slug has been edited.
-   *
-   * @var boolean
-   */
-  public $slugEdited = false;
-
   protected function rules()
   {
     return [
       'post.title' => 'required|min:2|max:128',
       'post.description' => 'max:256',
-      'file' => 'required|mimetypes:audio/mpeg|max:8000',
-      'post.slug' => ['required', 'max:32', new SlugFormat, new SlugUnique],
+      'file' => 'nullable|mimetypes:audio/mpeg|max:8000',
+      'post.slug' => ['required', 'max:128', new SlugFormat, new SlugUnique],
       'post.status' => 'required|in:draft,unlisted,published',
     ];
   }
@@ -57,47 +50,32 @@ class PostCreate extends Component
     $this->post = $post;
   }
 
-  public function updatedFile()
-  {
-    $this->validate([
-      'file' => 'required|mimetypes:audio/mpeg|max:8000',
-    ]);
-  }
-
-  public function updatedPostTitle()
-  {
-    if ($this->slugEdited) return;
-    $this->post->slug = Str::slug($this->post->title, '-');
-  }
-
   public function updatedPostSlug()
   {
-    $this->slugEdited = true;
     $this->validateOnly('post.slug');
   }
 
   public function submit()
   {
-    $this->authorize('create', Post::class);
+    $this->authorizeForUser(Auth::user(), 'update', $this->post);
     $this->validate();
+
+    $user_id = Auth::user()->id;
 
     DB::beginTransaction();
 
-    $user_id = Auth::user()->id;
-    $file_path = $this->file->store('uploads', 'public');
+    if ($this->file !== null) {
+      $file_path = $this->file->store('uploads', 'public');
+      if (!$file_path) throw new \Exception('Unable to save uploaded file.');
+      $file = new File();
+      $file->name = $this->file->getClientOriginalName();
+      $file->user_id = $user_id;
+      $file->file_path = $file_path;
+      $file->save();
+      $this->post->file_id = $file->id;
+    }
 
-    if (!$file_path) throw new \Exception('Unable to save uploaded file.');
-
-    $file = new File();
-    $file->name = $this->file->getClientOriginalName();
-    $file->user_id = $user_id;
-    $file->file_path = $file_path;
-    $file->save();
-
-    $this->post->user_id = $user_id;
-    $this->post->file_id = $file->id;
-
-    if ($this->post->status === 'published') {
+    if ($this->post->published_at === null && $this->post->status === 'published') {
       $this->post->published_at = Carbon::now();
     }
 
@@ -106,7 +84,9 @@ class PostCreate extends Component
     DB::commit();
 
     // Clean up temporary file
-    $this->file->delete();
+    if ($this->file !== null) $this->file->delete();
+
+    session()->flash('message', 'Post successfully updated.');
 
     return redirect()->route('posts.show', ['id' => $this->post->id]);
   }

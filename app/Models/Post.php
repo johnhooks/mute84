@@ -69,6 +69,6 @@ class Post extends Model
 
     public function permalink()
     {
-        return url('/') . '/' . $this->user->slug . '/' . $this->slug;
+        return url('/') . '/' . $this->user->slug . '/audio/' . $this->slug;
     }
 }

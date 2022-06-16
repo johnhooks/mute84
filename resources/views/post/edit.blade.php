@@ -1,1 +1,16 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            {{ __('Edit Audio Post') }}
+        </h2>
+    </x-slot>
 
+    <div class="py-0 sm:py-12">
+        <x-card.card>
+            <x-card.heading title="Audio Post" />
+            <div class="px-4 py-5 sm:p-0">
+                <livewire:post-edit :post="$post" />
+            </div>
+        </x-card.card>
+    </div>
+</x-app-layout>

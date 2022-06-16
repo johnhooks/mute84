@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Models\Post;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -27,10 +26,7 @@ class PostController extends Controller
     public function create()
     {
         $this->authorize('post.create');
-
-        return view('post.create', [
-            'post' => new Post,
-        ]);
+        return view('post.create', ['post' => new Post]);
     }
 
     /**
@@ -41,7 +37,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('post.store');
     }
 
     /**
@@ -64,7 +60,10 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        // TODO This still needs to be thought out. I need a livewire form that can fill both create and edit.
+        $this->authorize('post.edit');
+        $post = Post::findOrFail($id);
+        return view('post.edit', ['post' => $post]);
     }
 
     /**

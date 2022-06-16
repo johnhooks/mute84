@@ -6,10 +6,11 @@
     </x-slot>
 
     <div class="py-0 sm:py-12">
-        <div class="mx-auto max-w-7xl pb-32 sm:px-6 lg:px-8">
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-4 sm:py-8 sm:px-6 lg:px-8">
+        <x-card.card>
+            <x-card.heading title="Audio Post" />
+            <div class="px-4 py-5 sm:p-0">
                 <livewire:post-create :post="$post" />
             </div>
-        </div>
+        </x-card.card>
     </div>
 </x-app-layout>

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->bigInteger('file_id')->unsigned();
             $table->string('title', 128)->nullable();
             $table->string('description', 256)->nullable();
-            $table->string('slug', 128)->nullable();
+            $table->string('slug', 64)->nullable();
             $table->text('body')->nullable();
             $table->enum('status', ['draft', 'unlisted', 'published'])->default('draft');
             $table->dateTime('published_at')->nullable();
@@ -27,6 +27,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('file_id')->references('id')->on('files');
+            $table->index('slug');
         });
     }
 

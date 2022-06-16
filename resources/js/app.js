@@ -31,7 +31,6 @@ document.addEventListener("alpine:init", () => {
       if (url === this.url) {
         if (audio.paused) {
           audio.play();
-          if (!visualizer) visualizer = levels.init(audio, document.querySelector("#visualizer"));
           this.playing = true;
         } else {
           audio.pause();
@@ -41,7 +40,6 @@ document.addEventListener("alpine:init", () => {
       }
       this.url = url;
       audio.src = url;
-      if (!visualizer) visualizer = levels.init(audio, document.querySelector("#visualizer"));
       audio.play();
       this.playing = true;
     },
@@ -73,7 +71,7 @@ document.addEventListener("alpine:init", () => {
       running: false,
 
       init() {
-        // const dispose = levels.init(audio, this.$root);
+        if (!visualizer) visualizer = levels.init(audio, document.querySelector("#visualizer"));
       },
 
       toggle() {
