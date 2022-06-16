@@ -40,7 +40,7 @@ class PostController extends Controller
         $this->authorize('post.store');
     }
 
-    /**
+    /**\
      * Display the specified resource.
      *
      * @param  int  $id
