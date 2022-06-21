@@ -14,6 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Post::class);
         $posts = Post::all()->sortByDesc('created_at')->take(10);
         return view('post.list', ['posts' => $posts]);
     }
@@ -25,7 +26,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        $this->authorize('post.create');
+        $this->authorize('create', Post::class);
         return view('post.create', ['post' => new Post]);
     }
 
@@ -49,6 +50,7 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::find($id);
+        $this->authorize('view', $post);
         return view('post.show', ['post' => $post]);
     }
 
@@ -60,9 +62,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        // TODO This still needs to be thought out. I need a livewire form that can fill both create and edit.
-        $this->authorize('post.edit');
         $post = Post::findOrFail($id);
+        $this->authorize('edit', $post);
         return view('post.edit', ['post' => $post]);
     }
 
@@ -75,7 +76,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Handled by App\Http\Livewire\PostEdit
     }
 
     /**
@@ -86,6 +87,10 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $this->authorize('delete', $post);
+        Post::destroy($post->id);
+        // TODO should the file also be destroyed?
+        return back()->with('status', 'File successfully deleted.');
     }
 }

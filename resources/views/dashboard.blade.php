@@ -26,7 +26,9 @@
                     @forelse ($posts as $post)
                         <x-audio.post-preview :post="$post" :user="$user" />
                     @empty
-                        <li>No files</li>
+                        <li class="flex items-center justify-between p-6">
+                            You don't have any audio posts yet!
+                        </li>
                     @endforelse
                 </ul>
             </div>

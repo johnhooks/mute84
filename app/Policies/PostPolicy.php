@@ -31,7 +31,6 @@ class PostPolicy
      */
     public function view(User $user, Post $post)
     {
-        if ($post->status === 'posted') return Response::allow();
         return $user->id === $post->user_id || $user->can('post.viewAny') ? Response::allow() : Response::deny('You do not have permission to view this post.');
     }
 

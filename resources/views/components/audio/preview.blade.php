@@ -9,7 +9,7 @@
     </div>
     <div class="ml-4 flex flex-shrink-0 items-center">
         <a href="{{ $url }}"
-           class="mr-4 font-medium text-indigo-600 hover:text-indigo-500">
+           class="mr-4 font-medium text-indigo-600 hover:text-indigo-500" {{ $attributes }}>
             Download
         </a>
         <div class="flex">

@@ -7,13 +7,16 @@
 
     <div class="py-0 sm:py-12">
         <x-card.card>
+
             <x-card.heading title=" Audio Post">
-                <a href="{{ route('posts.edit', $post) }}">
-                    <button
-                            class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        Edit Post
-                    </button>
-                </a>
+                @if (auth()->user()->can('post.edit', $post))
+                    <a href="{{ route('posts.edit', $post) }}">
+                        <button
+                                class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            Edit Post
+                        </button>
+                    </a>
+                @endif
             </x-card.heading>
             <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
                 <dl class="sm:divide-y sm:divide-gray-200">

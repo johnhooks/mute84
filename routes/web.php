@@ -18,7 +18,10 @@ use App\Http\Controllers\PostController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $posts = App\Models\Post::with(['user' => function ($query) {
+        $query->select('id', 'name', 'slug');
+    }])->where('status', 'published')->orderBy('published_at', 'desc')->paginate(20);
+    return view('welcome', ['posts' => $posts]);
 });
 
 Route::get('/upload-file', [FileUpload::class, 'createForm'])->middleware(['auth'])->name('fileUpload');;
@@ -70,7 +73,11 @@ Route::get('/scottswenson/it-flows-back', function () {
 Route::get('/dashboard', [Dashboard::class, 'show'])->middleware(['auth'])->name('dashboard');
 
 Route::get('/{user:slug}/audio/{post:slug}', function (App\Models\User $user, App\Models\Post $post) {
-    return view('post.show', ['post' => $post]);
+    if ($post->status === 'published' || $post->status === 'unlisted' || auth()->user() !== null) {
+        return view('post.single', ['post' => $post]);
+    }
+
+    abort(404);
 });
 
 require __DIR__ . '/auth.php';
