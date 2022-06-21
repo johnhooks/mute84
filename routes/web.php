@@ -58,18 +58,6 @@ Route::get('/tapeloop-01', function () {
     return view('player/tapeloop-01');
 });
 
-Route::get('/johnhooks/rush', function () {
-    return view('johnhooks/rush');
-});
-
-Route::get('/scottswenson/ne2', function () {
-    return view('scottswenson/ne2');
-});
-
-Route::get('/scottswenson/it-flows-back', function () {
-    return view('scottswenson/it-flows-back');
-});
-
 Route::get('/dashboard', [Dashboard::class, 'show'])->middleware(['auth'])->name('dashboard');
 
 Route::get('/{user:slug}/audio/{post:slug}', function (App\Models\User $user, App\Models\Post $post) {

@@ -21,14 +21,6 @@
                 @enderror
             </x-form.textarea>
 
-            {{-- <x-form.audio-upload wire:model.debounce.500ms="file" label="Audio File" id="post-file-upload"
-                                 :file="$post->file"
-                                 accept="audio/mpeg">
-                @error('file')
-                    <x-slot:error> {{ $message }} </x-slot:error>
-                @enderror
-            </x-form.audio-upload> --}}
-
             @if ($file)
                 <x-form.form-control id="post-file-preview" label="Audio File">
                     <x-audio.preview id="post-file-preview" :url="$file->temporaryUrl()" :name="$file->getClientOriginalName()" />
