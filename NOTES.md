@@ -4,6 +4,10 @@
 - `spatie/laravel-permission`
 - `livewire/livewire`
 
+## Laravel Breeze
+
+- [Upgrade to v2](https://github.com/laravel/breeze/blob/2.x/UPGRADE.md)
+
 ## Laravel Mix
 
 ### Live Reload
