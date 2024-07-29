@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>File Uploader</title>
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    @vite(['resources/css/app.css'])
 
     <style>
         body {
@@ -24,7 +23,6 @@
                     hsl(55deg 100% 50%) 100%);
             background-attachment: fixed;
         }
-
     </style>
 </head>
 
