@@ -1,4 +1,5 @@
-require("./bootstrap.js");
+import "../css/app.css";
+import "./bootstrap.js";
 
 //@ts-ignore
 import Alpine from "alpinejs";

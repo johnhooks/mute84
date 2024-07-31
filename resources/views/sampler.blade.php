@@ -3,7 +3,7 @@
         sampler
     </x-slot:title>
     <x-slot:scripts>
-        <script src="{{ mix('js/sampler.js') }}" defer></script>
+        @vite(['resources/js/sampler.js'])
     </x-slot:scripts>
     <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 py-4">
         <div class="flex justify-center">

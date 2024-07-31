@@ -6,6 +6,12 @@ const FFT_SIZE = 512;
 const clock = new THREE.Clock();
 const scene = new THREE.Scene();
 
+// https://stackoverflow.com/a/51942991
+
+let delta = 0;
+// 30 fps
+let interval = 1 / 30;
+
 // Create a new framebuffer we will use to render to
 // the video card memory
 let renderBufferA = new THREE.WebGLRenderTarget(
@@ -336,12 +342,6 @@ function onAnimLoop() {
   renderBufferA = renderBufferB;
   renderBufferB = temp;
 }
-
-// https://stackoverflow.com/a/51942991
-
-let delta = 0;
-// 30 fps
-let interval = 1 / 30;
 
 function animate() {
   requestAnimationFrame(animate);

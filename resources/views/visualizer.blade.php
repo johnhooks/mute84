@@ -3,6 +3,6 @@
         visualizer
     </x-slot:title>
     <x-slot:scripts>
-        <script src="{{ mix('js/audio.js') }}" defer></script>
+        @vite(['resources/js/audio.js'])
     </x-slot:scripts>
 </x-layouts.visual>

@@ -3,7 +3,7 @@
         tapeloop-01 - mute84
     </x-slot:title>
     <x-slot:scripts>
-        <script src="{{ mix('js/player.js') }}" defer></script>
+        @vite(['resources/js/player.js'])
     </x-slot:scripts>
     <div class="min-h-screen flex flex-col">
         <div style="min-height: 50vh;">
