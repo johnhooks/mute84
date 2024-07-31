@@ -1,20 +1,20 @@
-<form wire:submit.prevent="submit" class="space-y-8">
+<form wire:submit="submit" class="space-y-8">
     <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
         <div class="space-y-6 sm:space-y-5">
-            <x-form.text-input wire:model.debounce.500ms="post.title" label="Title" id="post-title">
+            <x-form.text-input wire:model.live.debounce.500ms="post.title" label="Title" id="post-title">
                 @error('post.title')
                     <x-slot:error> {{ $message }} </x-slot:error>
                 @enderror
             </x-form.text-input>
 
-            <x-form.permalink wire:model.lazy="post.slug" label="Permalink" id="post-permalink"
+            <x-form.permalink wire:model.blur="post.slug" label="Permalink" id="post-permalink"
                               :url="url('/') . '/' . auth()->user()->slug . '/'">
                 @error('post.slug')
                     <x-slot:error> {{ $message }} </x-slot:error>
                 @enderror
             </x-form.permalink>
 
-            <x-form.textarea wire:model.lazy="post.description" label="Description" id="post-description"
+            <x-form.textarea wire:model.blur="post.description" label="Description" id="post-description"
                              rows="3">
                 @error('post.description')
                     <x-slot:error> {{ $message }} </x-slot:error>
@@ -26,14 +26,14 @@
                     <x-audio.preview id="post-file-preview" :url="$file->temporaryUrl()" :name="$file->getClientOriginalName()" />
                 </x-form.form-control>
             @else
-                <x-form.file-upload id="post-file-upload" label="Audio File" wire:model="file" :file="$post->file">
+                <x-form.file-upload id="post-file-upload" label="Audio File" wire:model.live="file" :file="$post->file">
                     @error('file')
                         <x-slot:error> {{ $message }} </x-slot:error>
                     @enderror
                 </x-form.file-upload>
             @endif
 
-            <x-form.select wire:model="post.status" label="Status" id="post-status">
+            <x-form.select wire:model.live="post.status" label="Status" id="post-status">
                 <option value="draft">Draft</option>
                 <option value="unlisted">Unlisted</option>
                 <option value="published">Published</option>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use App\Models\Post;
 use App\Models\File;
@@ -9,7 +9,7 @@ use App\Rules\SlugUnique;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\TemporaryUploadedFile;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;

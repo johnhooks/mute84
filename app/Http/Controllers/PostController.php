@@ -76,7 +76,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Handled by App\Http\Livewire\PostEdit
+        // Handled by App\Livewire\PostEdit
     }
 
     /**

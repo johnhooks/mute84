@@ -14,7 +14,7 @@
         <x-slot:error> {{ $error }} </x-slot:error>
     @endif
 
-    <div x-data="{ isUploading: false, progress: 0, error: false, file: @entangle('file') }"
+    <div x-data="{ isUploading: false, progress: 0, error: false, file: @entangle('file').live }"
          x-on:livewire-upload-start="isUploading = true"
          x-on:livewire-upload-finish="isUploading = false; progress = 0; console.log(file);"
          x-on:livewire-upload-error="error = true ;isUploading = false"
