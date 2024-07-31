@@ -39,8 +39,6 @@
     @vite(['resources/js/app.js'])
     @livewireScripts
     {{ $scripts ?? '' }}
-
-
 </head>
 
 <body class="font-sans antialiased">
