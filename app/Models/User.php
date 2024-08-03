@@ -3,15 +3,35 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * Class User
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property \Illuminate\Support\Carbon $email_verified_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property Collection<File> $files
+ * @property Collection<Post> $posts
+ *
+ * @package App\Models
+ */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -46,20 +66,16 @@ class User extends Authenticatable
 
     /**
      * The files owned by the user.
-     *
-     * @return array<\App\Models\File>
      */
-    public function files()
+    public function files(): HasMany
     {
         return $this->hasMany('App\Models\File');
     }
 
     /**
      * The posts owned by the user.
-     *
-     * @return array<\App\Models\Post>
      */
-    public function posts()
+    public function posts(): HasMany
     {
         return $this->hasMany('App\Models\Post');
     }

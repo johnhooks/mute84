@@ -5,10 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class Post
+ *
+ * @property int $id
+ * @property string $title
+ * @property string $description
+ * @property string $body
+ * @property string $slug
+ * @property string $status
+ * @property int $user_id
+ * @property int $file_id
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Support\Carbon $deleted_at
+ * @property \App\Models\User $user
+ * @property \App\Models\File $file
+ *
+ * @package App\Models
+ */
 class Post extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     /**
      * I don't know if this is the best. But it will work for right now.
@@ -50,20 +71,16 @@ class Post extends Model
 
     /**
      * Get the user that owns the post.
-     *
-     * @return \App\Models\User
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
     /**
      * Get the file associated with this post.
-     *
-     * @return \App\Models\Post
      */
-    public function file()
+    public function file(): BelongsTo
     {
         return $this->belongsTo(File::class);
     }
