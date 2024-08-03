@@ -6,8 +6,6 @@ import { Livewire, Alpine } from "../../vendor/livewire/livewire/dist/livewire.e
 
 import * as levels from "./levels.js";
 
-Livewire.start();
-
 document.addEventListener("alpine:init", () => {
   const audio = new Audio();
 
@@ -82,4 +80,4 @@ document.addEventListener("alpine:init", () => {
   });
 });
 
-Alpine.start();
+Livewire.start();
