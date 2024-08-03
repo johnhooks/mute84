@@ -24,7 +24,7 @@ Route::get('/', function () {
     return view('welcome', ['posts' => $posts]);
 });
 
-Route::get('/upload-file', [FileUpload::class, 'createForm'])->middleware(['auth'])->name('fileUpload');;
+Route::get('/upload-file', [FileUpload::class, 'createForm'])->middleware(['auth']);
 Route::post('/upload-file', [FileUpload::class, 'fileUpload'])->middleware(['auth'])->name('fileUpload');
 
 Route::controller(FileController::class)->group(function () {
