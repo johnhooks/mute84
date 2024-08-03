@@ -2,11 +2,11 @@ import "../css/app.css";
 import "./bootstrap.js";
 
 //@ts-ignore
-import Alpine from "alpinejs";
+import { Livewire, Alpine } from "../../vendor/livewire/livewire/dist/livewire.esm";
 
 import * as levels from "./levels.js";
 
-window.Alpine = Alpine;
+Livewire.start();
 
 document.addEventListener("alpine:init", () => {
   const audio = new Audio();

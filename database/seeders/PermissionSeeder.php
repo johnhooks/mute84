@@ -57,6 +57,6 @@ class PermissionSeeder extends Seeder
         $role2->givePermissionTo('post.deleteAny');
 
         Role::create(['name' => 'super']);
-        // gets all permissions via Gate::before rule; see AuthServiceProvider
+        // gets all permissions via Gate::before rule; see AppServiceProvider
     }
 }

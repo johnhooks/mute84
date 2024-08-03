@@ -114,6 +114,13 @@ return [
     'teams' => false,
 
     /*
+     * Passport Client Credentials Grant
+     * When set to true the package will use Passports Client to check permissions
+     */
+
+     'use_passport_client_credentials' => false,
+
+    /*
      * When set to true, the required permission names are added to the exception
      * message. This could be considered an information leak in some contexts, so
      * the default setting is false here for optimum safety.
@@ -134,6 +141,14 @@ return [
      */
 
     'enable_wildcard_permission' => false,
+
+    /*
+     * The class to use for interpreting wildcard permissions.
+     * If you need to modify delimiters, override the class and specify its name here.
+     */
+    // 'permission.wildcard_permission' => Spatie\Permission\WildcardPermission::class,
+
+    /* Cache-specific settings */
 
     'cache' => [
 
