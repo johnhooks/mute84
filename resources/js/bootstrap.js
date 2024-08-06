@@ -1,5 +1,5 @@
 import _ from "lodash";
-import filesize from "filesize";
+import { filesize } from "filesize";
 import axios from "axios";
 
 window._ = _;
