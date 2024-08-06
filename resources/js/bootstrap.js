@@ -1,3 +1,6 @@
+import "media-chrome";
+import "media-chrome/dist/media-theme-element.js";
+
 import _ from "lodash";
 import { filesize } from "filesize";
 import axios from "axios";

@@ -3,8 +3,8 @@
     "module": "commonjs",
     "target": "es6",
     "checkJs": true,
-    "lib": ["DOM"],
-    "typeRoots": ["./resources/js/types", "./node_modules/@types"],
+    "lib": ["DOM", "ES2022"],
+    "typeRoots": ["./resources/js/types", "./node_modules/@types"]
   },
   "include": ["resources/js/**/*"],
   "exclude": ["node_modules"]
