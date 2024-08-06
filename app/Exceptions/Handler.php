@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Exceptions\RestApi\RestApiException;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -19,7 +21,7 @@ class Handler extends ExceptionHandler
     /**
      * A list of the exception types that are not reported.
      *
-     * @var array<int, class-string<\Throwable>>
+     * @var array<int,class-string<Throwable>>
      */
     protected $dontReport = [
         //
@@ -28,7 +30,7 @@ class Handler extends ExceptionHandler
     /**
      * A list of the inputs that are never flashed to the session on validation exceptions.
      *
-     * @var array<int, string>
+     * @var array<int,string>
      */
     protected $dontFlash = [
         'current_password',
@@ -46,5 +48,30 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param Request $request
+     * @param Throwable               $exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws Throwable
+     */
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof RestApiException) {
+            return response()->json([
+                'errors' => [
+                    [$exception->getErrorCode()] => [
+                        'message' => $exception->getErrorMessage(),
+                    ],
+                ],
+            ], $exception->getHttpCode());
+        }
+
+        return parent::render($request, $exception);
     }
 }

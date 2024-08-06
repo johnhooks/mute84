@@ -1,0 +1,29 @@
+includes:
+  - ./vendor/nunomaduro/larastan/extension.neon
+  - ./vendor/phpstan/phpstan-strict-rules/rules.neon
+
+rules:
+  - Spatie\Ray\PHPStan\RemainingRayCallRule
+
+parameters:
+
+  paths:
+    - app/
+    - tests/
+
+  # Level 9 is the highest level
+  level: 1
+
+  strictRules:
+    disallowedLooseComparison: false
+    booleansInConditions: false
+    uselessCast: false
+    requireParentConstructorCall: true
+    disallowedConstructs: false
+    overwriteVariablesWithLoop: false
+    closureUsesThis: false
+    matchingInheritedMethodNames: false
+    numericOperandsInArithmeticOperators: false
+    strictCalls: false
+    switchConditionsMatchingType: false
+    noVariableVariables: false

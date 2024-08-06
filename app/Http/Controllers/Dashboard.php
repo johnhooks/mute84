@@ -11,6 +11,7 @@ class Dashboard extends Controller
     {
         $user = Auth::user();
         $posts = Post::with(['user', 'file'])->where('user_id', $user->id)->orderBy('updated_at', 'desc')->paginate(20);
+
         return view('dashboard', ['posts' => $posts, 'user' => $user]);
     }
 }
