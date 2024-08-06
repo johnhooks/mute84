@@ -17,8 +17,7 @@
 
     <!-- Scripts -->
     @vite(['resources/js/app.js'])
-    @livewireScriptConfig
-
+    @livewireScripts
     {{ $scripts ?? '' }}
 </head>
 

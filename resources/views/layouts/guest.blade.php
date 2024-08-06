@@ -17,7 +17,7 @@
 
     <!-- Scripts -->
     @vite(['resources/js/app.js'])
-    @livewireScriptConfig
+    @livewireScripts
 </head>
 
 <body>

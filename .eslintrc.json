@@ -3,7 +3,7 @@
   "plugins": ["@typescript-eslint", "import"],
   "extends": [
     "eslint:recommended",
-    // "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:prettier/recommended"
@@ -59,10 +59,12 @@
         "no-dupe-class-members": "off",
         "no-unused-vars": "off",
         "@typescript-eslint/ban-ts-comment": "off",
-        // "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-        "@typescript-eslint/no-var-requires": ["error"],
-        "@typescript-eslint/explicit-module-boundary-types": ["error"]
-        //
+        "@typescript-eslint/no-require-imports": "error",
+        "@typescript-eslint/explicit-module-boundary-types": "error",
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+        ]
       }
     }
   ],

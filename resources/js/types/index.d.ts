@@ -1,6 +1,7 @@
 import _ from "lodash";
 import axios from "axios";
 import filesize from "filesize";
+import { Alpine as AlpineType } from "alpinejs";
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -11,6 +12,8 @@ import filesize from "filesize";
 export {};
 
 declare global {
+  var Alpine: AlpineType;
+
   interface Window {
     _: _;
     axios: axios;

@@ -54,7 +54,7 @@ orthoCamera.lookAt(new THREE.Vector3(0, 0, 0));
 // Create a plane geometry that spawns either the entire
 // viewport height or width depending on which one is bigger. NOTE: its the smaller not bigger
 const labelMeshSize = innerWidth > innerHeight ? innerHeight : innerWidth;
-const labelGeometry = new THREE.PlaneBufferGeometry(labelMeshSize, labelMeshSize);
+const labelGeometry = new THREE.PlaneGeometry(labelMeshSize, labelMeshSize);
 
 // TODO This is where I would create the audio visualizer.
 // Programmaticaly create a texture that will hold the text
@@ -96,7 +96,7 @@ const labelMaterial = new THREE.MeshBasicMaterial({
 const labelMesh = new THREE.Mesh(labelGeometry, labelMaterial);
 scene.add(labelMesh);
 
-const mediaElement = document.querySelector("#audio");
+const mediaElement = /** @type {HTMLMediaElement} */ (document.querySelector("#audio"));
 const listener = new THREE.AudioListener();
 const audio = new THREE.Audio(listener);
 const analyser = new THREE.AudioAnalyser(audio, FFT_SIZE);
@@ -154,7 +154,7 @@ levelsScene.add(levelsMesh);
 
 audio.setMediaElementSource(mediaElement);
 
-document.onclick = event => {
+document.onclick = _event => {
   audio.context.resume();
   mediaElement.play();
 };
@@ -163,7 +163,7 @@ document.onclick = event => {
 const postFXScene = new THREE.Scene();
 
 // Create a plane geometry that covers the entire screen
-const postFXGeometry = new THREE.PlaneBufferGeometry(innerWidth, innerHeight);
+const postFXGeometry = new THREE.PlaneGeometry(innerWidth, innerHeight);
 
 // Create a plane material that expects a sampler texture input
 // We will pass our generated framebuffer texture to it
