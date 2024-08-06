@@ -1,9 +1,6 @@
 import "../css/app.css";
 import "./bootstrap.js";
 
-//@ts-ignore
-import { Livewire, Alpine } from "../../vendor/livewire/livewire/dist/livewire.esm";
-
 import * as levels from "./levels.js";
 
 document.addEventListener("alpine:init", () => {
@@ -79,5 +76,3 @@ document.addEventListener("alpine:init", () => {
     };
   });
 });
-
-Livewire.start();
