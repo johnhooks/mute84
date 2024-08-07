@@ -20,3 +20,18 @@
   box-shadow: 0 0 0 3px rgba(164, 202, 254, 0.45);
   border-color: #a4cafe;
 }
+
+.player__container {
+  display: grid;
+  grid-template-rows: 1fr max-content 0.5fr;
+  gap: 1rem;
+  min-height: 100vh;
+}
+
+.player__meta {
+  grid-row: 2 / 3;
+}
+
+.player__controls {
+  grid-row: 3 / 4;
+}

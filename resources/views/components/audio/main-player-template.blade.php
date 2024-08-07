@@ -16,6 +16,7 @@
         }
 
         media-controller {
+            --media-background-color: transparent;
             --media-control-background: transparent;
             --media-control-hover-background: transparent;
             --media-control-active;
@@ -71,7 +72,12 @@
             background-color: var(--bg-color-hover);
         }
 
-        media-time-display {}
+        media-time-display {
+            font-size: 0.75rem;
+            line-height: 1rem;
+
+            border-radius: 0.375rem;
+        }
 
         media-time-range {
             --media-range-track-background: var(--slate-500);
@@ -159,6 +165,8 @@
 
             width: 100%;
             max-width: 600px;
+
+            padding: 1rem 0;
         }
     </style>
 
