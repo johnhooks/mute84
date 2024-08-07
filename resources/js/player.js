@@ -35,29 +35,16 @@ let colorIndex = 0;
 const canvas = new FullscreenCanvas(document.querySelector("main"));
 
 /** @type {HTMLAudioElement} */
-const buffer = document.querySelector("#audio");
-const button = document.querySelector("#play-btn");
+const buffer = /** @type {HTMLAudioElement} */ (document.querySelector("#audio"));
 
 /** @type {Player} */
 let player;
-let playing = false;
 
-button.addEventListener("click", () => {
+buffer.addEventListener("play", () => {
   if (!player) {
     player = new Player(buffer);
     getAudio();
   }
-
-  if (!playing) {
-    player.bufferElement.play();
-    document.querySelector("#play")?.classList?.add("hidden");
-    document.querySelector("#pause")?.classList?.remove("hidden");
-  } else {
-    player.bufferElement.pause();
-    document.querySelector("#play")?.classList?.remove("hidden");
-    document.querySelector("#pause")?.classList?.add("hidden");
-  }
-  playing = !playing;
 });
 
 async function getAudio() {

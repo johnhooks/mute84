@@ -5,6 +5,7 @@
     <x-slot:scripts>
         @vite(['resources/js/player.js'])
     </x-slot:scripts>
+
     <div class="min-h-screen flex flex-col">
         <div style="min-height: 50vh;">
         </div>
@@ -15,24 +16,12 @@
                     <p class="text-gray-400 text-center">by mute84</p>
                 </div>
             </div>
-            <div class="flex justify-center items-center space-x-4 pt-2 sm:pt-4">
-                <button id="play-btn" type="button"
-                    class="inline-flex items-center p-3 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <!-- Heroicon name: outline/plus-sm -->
-                    <svg id="play" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                        viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                        <path
-                            d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
-                    </svg>
-                    <svg id="pause" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                        viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                        <path
-                            d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z" />
-                    </svg>
-                </button>
-            </div>
-            <div class="flex justify-center items-center">
-                <audio id="audio" src="/storage/dadbeats_20220525_08_tape_loop.MP3" type="audio/mpeg" />
+
+            <div class="flex items-center justify-center space-x-4 pt-2 sm:pt-4">
+                <media-theme template="media-theme-player">
+                    <audio slot="media" id="audio" src="/storage/dadbeats_20220525_08_tape_loop.MP3"
+                        type="audio/mpeg" />
+                </media-theme>
             </div>
         </div>
     </div>

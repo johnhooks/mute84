@@ -58,6 +58,8 @@
         <main class="min-h-screen">
             {{ $slot }}
         </main>
+
+        <x-audio.main-player-template />
     </div>
 </body>
 
