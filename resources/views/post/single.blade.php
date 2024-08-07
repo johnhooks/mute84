@@ -25,7 +25,7 @@
             </div>
 
             <div class="flex items-center justify-center space-x-4 pt-2 sm:pt-4">
-                <media-theme template="media-theme-player">
+                <media-theme template="media-theme-player" class="inline-block w-full leading-none">
                     <audio slot="media" id="audio" src="{{ storage_url($post->file->file_path) }}"
                         type="audio/mpeg" />
                 </media-theme>
